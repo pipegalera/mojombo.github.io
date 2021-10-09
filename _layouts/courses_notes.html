@@ -1,15 +1,7 @@
 ---
 layout: default
 ---
-<div id="course_notes">
+<div id="post">
 {{ content }}
 </div>
 
-<div id="related">
-  <h2>Previous Posts</h2>
-  <ul class="courses_notes">
-    {% for course_notes in site.related_posts limit:3 %}
-      <li><span>{{ course_notes.date | date_to_string }}</span> &raquo; <a href="{{ course_notes.url }}">{{ course_notes.title }}</a></li>
-    {% endfor %}
-  </ul>
-</div>
