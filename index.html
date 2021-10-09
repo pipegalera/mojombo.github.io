@@ -14,7 +14,7 @@ title: Pipe Galera
   <h1>Courses notes</h1>
   <ul>
     {% for notes in site.courses_notes %}
-      <li>{{ notes.title }}</a></li>
+      <li><a href="{{ notes.url }}"></a>{{ notes.title }}</a></li>
     {% endfor %}
   </ul>
 
