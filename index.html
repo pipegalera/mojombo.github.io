@@ -11,6 +11,13 @@ title: Pipe Galera
     {% endfor %}
   </ul>
 
+  <h1>Courses notes</h1>
+  <ul class="posts">
+    {% for project in site.projects %}
+      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+
   <h1>Book notes</h1>
   <ul class="posts">
     <li><span>12 Sep 2013</span> &raquo; <a href="http://www.youtube.com/watch?v=k2vJNNAQZlg">Video: Fox Business News interview</a></li>
