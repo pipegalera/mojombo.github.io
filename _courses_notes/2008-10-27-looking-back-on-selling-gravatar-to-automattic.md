@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: course_notes
 title: Looking back on Selling Gravatar to Automattic
 ---
 
