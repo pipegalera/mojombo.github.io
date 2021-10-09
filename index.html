@@ -13,8 +13,8 @@ title: Pipe Galera
 
   <h1>Courses notes</h1>
   <ul class="posts">
-    {% for project in site.projects %}
-      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% for notes in site.course_notes %}
+      <li><span>{{ notes.date | date_to_string }}</span> &raquo; <a href="{{ notes.url }}">{{ notes.title }}</a></li>
     {% endfor %}
   </ul>
 
