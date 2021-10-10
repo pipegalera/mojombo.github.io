@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Post test3
+title: Book Test
 ---
 
 {{ page.title }}
