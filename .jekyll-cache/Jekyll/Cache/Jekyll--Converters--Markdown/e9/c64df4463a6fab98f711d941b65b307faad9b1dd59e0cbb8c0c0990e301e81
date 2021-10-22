@@ -1,0 +1,312 @@
+I"�E<h1 id="mit-6s191---lecture-2---recurrent-neural-networks">MIT 6.S191 - Lecture 2 - Recurrent Neural Networks</h1>
+
+<h2 id="intro">Intro</h2>
+
+<p>From a single perceptron, we can extend the number of inputs, neurons and hield multi-dimensional outputs:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_multi_output.png" alt="" /></p>
+
+<p>But this multi perceptron, or Neural Network, doesn’t have a sense of time or element sequence. Every input and output is a specific time step.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_sequence.png" alt="" /></p>
+
+<p>This lack of connection between time steps is problematic in predicting problems that involves time or sequences. In a sequence, the inputs are correlated with each other. They are not independent. For example, future sales in a given shop are correlated with previuos sales, they are not independent events.</p>
+
+<p>Expresing it in the above graph, the output of \(\hat{y}_2\) not only depends on \(X_2\), but also on \(X_0\) and \(X_1\).</p>
+
+<h2 id="the-missing-piece-the-cell-state">The missing piece, the Cell state</h2>
+
+<p>To make use of the correlation of the inputs in sequence, the network would need to have a connection that allows to look forward. This connection is called internal memory or <strong>cell state</strong> \(h_t\):</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_multi_output.png" alt="" /></p>
+
+<p><strong>The memory or cell state pass the current information in the step \(t\) to the next step \(t+1\)</strong>.</p>
+
+<h2 id="recurrent-neural-networks">Recurrent Neural Networks</h2>
+
+<p>Recurrent Neural Networks are the result of incorporating the idea of using cell states to pass throw information between time steps. <strong>They can be thought of as multiple copies of the same network, each passing the new cell state value to a successor network</strong>. Every network is a time step of the <em>global</em> neural network.</p>
+
+<p>RNNs have a state \(h_t\), that is updated at each time step as a sequence is processed. The recurrent relation applied at each and every time step is defined as:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_rec_rel.png" alt="" /></p>
+
+<p>The function is going to be parametrized by a set of weights that is leaned throughout training the model. <strong>The same function and the very same parameters are applied every step of processing the sequence (every iteration of the model)</strong>.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_rnn_ac.png" alt="" /></p>
+
+<ul>
+  <li>
+    <p>\(W_{xh}\) denotes the weight matrix optimized for that specific step of the sequence.</p>
+  </li>
+  <li>
+    <p>\(W_{hh}\) denotes the weight matrix of the memory cell, reused every step for the entire sequence.</p>
+  </li>
+  <li>
+    <p>\(W_{hy}\) denotes the weight matrix of a combination of both the specific optimization of the weights for that step, and the memory cell matrix.</p>
+  </li>
+</ul>
+
+<p>In practice, you won’t see the cell states weigthing the outputs of the next step outputs, or multiple networks one after the other. The loop is made inside one single architecture. The RNN algorithm can be simplyfied as:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_rnn_eq.png" alt="" /></p>
+
+<h2 id="examples-of-rnn-application">Examples of RNN application</h2>
+
+<p>Recurrent Neural Networks are usually used in text problems such as sentiment classification, text generation from an image, generation of image title or translation.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_cat_words.png" alt="" /></p>
+
+<p>This is an example using <strong>many</strong> words <strong>to predict the one</strong> next word in the sentence. Depending on the problem, the number of inputs and outputs change, that modify the NN architecture:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_examples_rnn.png" alt="" /></p>
+
+<h2 id="making-neural-networks-understand-text-embedding">Making Neural Networks understand text: Embedding</h2>
+
+<p>Neural Networks do not understand word language, or images, they only understand numbers. They require the words to be parsed as vectors or arrays of numbers:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_words.png" alt="" /></p>
+
+<p><strong>How are this vectors made?</strong></p>
+
+<ol>
+  <li>
+    <p>The computer/algorithm gets all the words and create a <strong>vocabulary</strong> with them.</p>
+  </li>
+  <li>
+    <p>Then, it creates its own dictionary to understand them, assigning a number to each different word (<strong>indexing</strong>).</p>
+  </li>
+  <li>
+    <p>The numbers form vectors of a fixed size that captures the content of the word (<strong>embedding</strong>).</p>
+  </li>
+</ol>
+
+<p>By using vectors and not single numbers, you can compare how close are vectors to each other. And comparing distance is key because the words that usually go together in a phase must be represented by vectors close to each other. For example, the vector of <em>dog</em> is closer to the vector of <em>cat</em> than to the vector of <em>sad</em>.</p>
+
+<p><strong>Embedding gather words together by similarity using the distance between vectors.</strong></p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_embedding.png" alt="" /></p>
+
+<h2 id="model-design-criteria-or-why-rnn-are-good">Model Design Criteria, or why RNN are good</h2>
+
+<p>Any recurrent model architecture must the following design criteria:</p>
+
+<ol>
+  <li>Must handle variable-length sequences (RNN ✔️)</li>
+</ol>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_length.png" alt="" /></p>
+
+<ol>
+  <li>Must track long-term dependencies (RNN ✔️)</li>
+</ol>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_long_dep.png" alt="" /></p>
+
+<ol>
+  <li>Must mantain information about order (RNN ✔️)</li>
+</ol>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_order.png" alt="" /></p>
+
+<ol>
+  <li>Must share parameters across the sequence (RNN ✔️)</li>
+</ol>
+
+<p>In RNNs the same memory cell is reused every step for the entire sequence, as explained previusly.</p>
+
+<h2 id="rnn-ilustrated-example-from-michael-phi">RNN Ilustrated example (from Michael Phi)</h2>
+
+<p>Let’s say that we want to do a many-to-one prediction in which the inputs are words in this cereal review and the output is a positive or negative sentiment analysis.</p>
+
+<p><img src="https://miro.medium.com/max/1400/1*YHjfAgozQaghcsEvsBEu2g.png" alt="" /></p>
+
+<p>First the words are transformed to vectors by embedding.</p>
+
+<p>From:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_LSTM_1.png" alt="" /></p>
+
+<p>To:</p>
+
+<p><img src="https://miro.medium.com/max/1400/1*AQ52bwW55GsJt6HTxPDuMA.gif" alt="" /></p>
+
+<p>While processing, it passes the previous hidden state to the next step of the sequence. The hidden state acts as the neural networks memory. It holds information on previous data the network has seen before.</p>
+
+<p><img src="https://miro.medium.com/max/1400/1*o-Cq5U8-tfa1_ve2Pf3nfg.gif" alt="" /></p>
+
+<p>For every of theses steps or layers, the input and previous hidden state are combined to form a vector. It goes through a tanh activation, and the output is the new hidden state \(h_t\). The tanh function ensures that the values stay between -1 and 1.</p>
+
+<p><img src="https://miro.medium.com/max/1400/1*WMnFSJHzOloFlJHU6fVN-g.gif" alt="" /></p>
+
+<h2 id="backpropagation-through-time-bptt">Backpropagation Through Time (BPTT)</h2>
+
+<p>The usual NN backpropagation algorithm:</p>
+
+<ol>
+  <li>Take the derivative (gradient) of the loss with respect to each parameter \(W\).</li>
+  <li>Shift parameters to minimize loss.</li>
+</ol>
+
+<p>With a basic Neural Network, the backpropagation errors goes trough a single feedforward network for a single time step.</p>
+
+<p>Recurrent Network backpropagation needs a twist, as it contains multiple steps and a memory cell. In RNNs, <strong>the errors are backpropagating from the overall loss through each time step</strong>:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_BPTT.png" alt="" /></p>
+
+<p>The key difference is that the gradients for \(W\) at each time step are summed. A traditional NN doesn’t share parameters across layers. Every input is different and have different weigths \(W\).</p>
+
+<h2 id="problems-with-backpropagation-in-rnn">Problems with backpropagation in RNN</h2>
+
+<p>Computing the gradient with respect to the initial \(h_0\) involves many matrix multiplications between the memory cell \(h_t\) and the weights \(W_hh\).</p>
+
+<h3 id="exploiting-gradients-gradients--10">Exploiting gradients (gradients &gt; 1.0)</h3>
+
+<p>In the the process of backpropagation the gradients get multiplied by each other over and over again. If they are larger than 1.0, the end matrix of weigths is huge.</p>
+
+<p>As a silly example: 0.5 times 1.5 is 0.75, 0.5 times 1.5^200 is 8.2645996e34. This can give you a perspective of how matrix multiplication can explote by mutliplying constantly by 1.X.</p>
+
+<p>These huge gradients can become extremely large as the result of matrix and the loss function cannot be minimized.</p>
+
+<p>The usual solution is change the derivative of the errors before they propagate through the network, so they don’t become huge. Basically, you can create a threshold that the gradients cannot surpass. <em>Create a threshold</em> means that you set a value, such as 1.0, that forces the values to be 1.0 at maximum.</p>
+
+<h3 id="avoid-exploiting-gradients-gradient-thresholds">Avoid exploiting gradients: Gradient thresholds</h3>
+
+<p>There are two ways to create these thresholds:</p>
+
+<p><strong>1. Gradient Norm Scaling</strong></p>
+
+<p>Gradient norm scaling rescales the matrix so the gradient equals 1.0 if the a gradient exceeds 1.0.</p>
+
+<p>Gradient Norm Scaling in Tensorflow:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">opt</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>2. Gradient Value Clipping</strong></p>
+
+<p>Gradient value clipping simply forces all the values above the threshold to be the threshold, without changing the matrix. If the clip is 0.5, all the gradient values less than -0.5 are set to -0.5 and all the gradients more than 0.5 set to 0.5.</p>
+
+<p>Gradient Norm Scaling in Tensorflow:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">opt</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">clipvalue</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="vanishing-gradients-gradients--1">Vanishing gradients (gradients &lt; 1)</h3>
+
+<p>As gradients can become huge they can also become tiny to the point that it is not possible to effectively train the network.</p>
+
+<p>This is a problem because the errors further back in time are not being propagated. It would cause that the long-term errors are vanished and bias the model only to capture short-term dependencies.</p>
+
+<h3 id="avoid-vanishing-gradients">Avoid vanishing gradients</h3>
+
+<p>The basic recipe to solve vanishing gradients is use a ReLU activation function, chaning to a smart weight initialization and/or use a different RNN architecture.</p>
+
+<p><strong>1. Change activation function to ReLU.</strong></p>
+
+<p>Why ReLu?</p>
+
+<p>Because when the cell or instance gets activated (weight 0 or more), by definition the derivative or gradient is 1.0 or more:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_activation_trick.png" alt="" /></p>
+
+<p><strong>2. Change weight initialization.</strong></p>
+
+<p>For example to the <strong>Xavier initialization/Glorot initialization</strong>:</p>
+
+<p>Changing the weight activation in Tensorflow:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Activation</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">),</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s">'glorot_uniform'</span><span class="p">),</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">)</span>
+<span class="p">])</span>
+</code></pre></div></div>
+<p><strong>3. Change Network architecture.</strong></p>
+
+<p>More complex RNNs such as <strong>LSTM or GRU</strong> can control the information that is passing through. Long Short Term Memory networks (<strong>LSTM</strong>) and Gated Recurrent Units (<strong>GRU</strong>) are special kinds of RNN, capable of learning long-term dependencies.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_activation_trick3.png" alt="" /></p>
+
+<p>They can keep informed of long-term dependencies <strong>using filters or gates</strong>. In essence, these gates decide how much information to keep of the previous neuron state or values, and how much to drop. This makes the optimization problem or the Neural Network less prompt to vanishing or exploding gradient problems.</p>
+
+<h2 id="lstm">LSTM</h2>
+
+<p>In a simple RNN, the information goes though every step with the input of that time step (\(x_t\)), the previous step memory cell (\(h_{t-1}\)) and an output for every step (\(y_t\)).</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_rnn_arq.png" alt="" /></p>
+
+<p>The structure of a LSTM is more complex. <strong>LSTM forces the matrix inputs in every step to go through gates</strong>, or internal mechanism to keep long-term information.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L2_lstm_arq.png" alt="" /></p>
+
+<h2 id="lstm-gates-system">LSTM Gates system</h2>
+
+<p>They 4 types of gates interacting within each step layer:</p>
+
+<ol>
+  <li><strong><em>Forget gate</em></strong>: Remove the irrelevant information.</li>
+</ol>
+
+<p>Information from the previous hidden state and the current input is passed through the sigmoid function. Values come out between 0 and 1.</p>
+
+<p>The closer to 0 means to forget, and the closer to 1 means to keep.</p>
+
+<p><img src="https://miro.medium.com/max/1400/1*GjehOa513_BgpDDP6Vkw2Q.gif" alt="" /></p>
+
+<ol>
+  <li><strong><em>Store gate</em></strong>: Store relevant information.</li>
+</ol>
+
+<p>The same previous \(h_{t-1}\) and the current inputs goes into two transformations:</p>
+
+<ul>
+  <li>
+    <p>Sigmoid transformation. It is the same operation as before, but in another gate. Instead of forget and keep, it will decide the information to update or not update.</p>
+  </li>
+  <li>
+    <p>Than transformation. It helps to regulate the network by squishing values between -1.0 and 1.0.</p>
+  </li>
+</ul>
+
+<p>The matrix multiplication of the tanh outputs with the sigmoid outputs decides which information is important, and store it in a cell state \(\bigotimes\).</p>
+
+<p><img src="https://miro.medium.com/max/1400/1*TTmYy7Sy8uUXxUXfzmoKbA.gif" alt="" /></p>
+
+<ol>
+  <li><strong><em>Update gate</em></strong>: update the separated cell state.</li>
+</ol>
+
+<ul>
+  <li>
+    <p>The update gate takes the previous cell state vector \(c_{t-1}\) and multiply by the forget vector (from the forget gate), that allows to drop non-important information.</p>
+  </li>
+  <li>
+    <p>Then, it adds the store vector from the store gate, as this information is important to keep from the current step.</p>
+  </li>
+</ul>
+
+<p><img src="https://miro.medium.com/max/1400/1*S0rXIeO_VoUVOyrYHckUWg.gif" alt="" /></p>
+
+<p>The update gate takes the information to the other 2 gates to decide what to forget and what to keep, updating the cell state.</p>
+
+<ol>
+  <li><strong><em>Output gate</em></strong>: decides what the next hidden state \(h_{t+1}\).</li>
+</ol>
+
+<ul>
+  <li>The previous hidden state and the current input into a sigmoid function.</li>
+  <li>Then the newly modified cell state pass the tanh function.</li>
+  <li>By multiplying the two vectors it decides what information the hidden state should carry.</li>
+</ul>
+
+<p><img src="https://miro.medium.com/max/1400/1*VOXRGhOShoWWks6ouoDN3Q.gif" alt="" /></p>
+
+<h2 id="gru">GRU</h2>
+
+<p>GRU’s has fewer tensor operations; therefore, they are a little speedier to train then LSTM’s. There isn’t a clear winner which one is better, try both to determine which one works better for their use case.</p>
+
+<p><img src="https://miro.medium.com/max/1400/1*jhi5uOm9PvZfmxvfaCektw.png" alt="" /></p>
+:ET

@@ -1,0 +1,211 @@
+I"�><h1 id="mit-6s191---lecture-3---convolutional-neural-network">MIT 6.S191 - Lecture 3 - Convolutional Neural Network</h1>
+
+<h2 id="computer-vision-introduction">Computer Vision Introduction</h2>
+
+<p>We can train computers to understand the world of images, mapping where things are, what actions are taking place, and making them to predict and anticipate events in the world. For example, in this image, the computer can pick up that people are crossing the street, so the black car must be not moving.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_cars.png" alt="" /></p>
+
+<h2 id="what-computers-see">What computers <em>see</em></h2>
+
+<p>Task that for us are trivial, for a computer is not. To a computer, the images are 2-dimensional arrays of numbers.</p>
+
+<p>Taking the following image, we are able to see that is a Lincoln portrait but the computer sees a 1080x1080x3 vector of numbers.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_lincoln.png" alt="" /></p>
+
+<p>The classification of an image by a computer is made by picking up clues, or features, from the image. If the particular features of the image are more present in Lincoln images, it will be classified as Lincoln.</p>
+
+<p>The algorithm, to perform this task well, should be able to differentiate between unique features and modifications of the same features. For example, it should classify as “Dog” a photo of dogs taken from different angles or a dog hidden in a tree.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_transformation_images.png" alt="" /></p>
+
+<p>The computer must be invariant of all those variations, as humans recognize the same image changing its viewpoint or scale.</p>
+
+<h2 id="learning-visual-features">Learning Visual features</h2>
+
+<p><strong>Computers learn hierarchically from the features</strong> in an image. For example, in face recognition the algorithm learn in order:</p>
+
+<ol>
+  <li>Facial structure.</li>
+  <li>Eyes, ears, nose.</li>
+  <li>Edges, dark spots</li>
+  <li>…</li>
+</ol>
+
+<p>A fully connected neural network can take as input an image in the shape of a 2D number array, and classify it. What would be the problem of using a Multilayer Perceptron to classify images?</p>
+
+<p>It’s not able to capture is no <strong>spatial information</strong>.</p>
+
+<p>If each feature of the image is an individual characteristic, all the connections between the image characteristics are lost. For example, a MLP architecture is not able to pick that the inner array of pixels the ears must be close to the outer array of pixels of the facial structure.</p>
+
+<p>How can we use spatial structure in the input to inform the architecture of the network?</p>
+
+<h2 id="patching">Patching</h2>
+
+<p>Spatial 2D pixel arrays are correlated to each other. By using a spatial structure, it would preserve the correlation of the pixels and its spatial architecture.</p>
+
+<p>We can think about a neural network architecture that takes different parts of the images in different layers and connects somehow the images. How would looks like?</p>
+
+<p>In a neural network with spatial structure each neuron takes a small pixel of the entire image and try to extract it’s feature information. Only a small region of the image, a <strong>patch</strong>, affects a concrete neuron and not the entire image.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_patches.png" alt="" /></p>
+
+<p><strong>The next neuron afterwards takes a shifted patch of pixels. The process is repeated for all the neurons until the entire image is taken as input by patches</strong>.</p>
+
+<p>As you can see in the image below , some of the patched pixels took from the first neuron in the left overlap some of the pixels pached in the right neuron.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_patches_connected.png" alt="" /></p>
+
+<p>The overlaping of pixels preserves the spatial component of the image. Every patch is intended to reveal features characteristic of the image.</p>
+
+<p>But…how the algorithm learn the features? How it knows to detect the ears or eyes in a patch? The process is called <em>local feature extraction</em>.</p>
+
+<h2 id="local-feature-extraction">Local feature Extraction</h2>
+
+<p>The neural network identify the features patches by weigthing the pixels.</p>
+
+<p>Take the following image. The idea is that the neural network have to classify the right image as an X or not a X.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_xisx.png" alt="" /></p>
+
+<p>While for us humans is simple to see that is an X, the pixel arrays do not match. After all, computers cannot see images, only arrays of numbers that do not match.</p>
+
+<p>By the process of patching, the neural network takes images with different pixel position that share same features:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_xisxfeatures.png" alt="" /></p>
+
+<p>Multiple patches in the X images are similar, or equal.</p>
+
+<p><strong>How the model calculates this similarity?</strong></p>
+
+<p>By <strong>the convolutional operation</strong>. While the name seems scary, it is just multiplying each pixel value elementwise between the filter matrix (<em>real X patch</em>) and the patch of the input image, and adding the outputs together.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_convolutional_operation.png" alt="" /></p>
+
+<p>In other words, comparing the pixels between the <em>“proper X patch”</em> and the input patch that “<em>might or might not be an X patch</em>”, in an anumerical way.</p>
+
+<p>By going through local patches, the algorithm can identify and extract local features for each patch:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_convolutional_operation_gif.gif" alt="" /></p>
+
+<p>The end matrix from the convolutional operation is called <strong>feature map</strong>, as it mapped the features of the input image.</p>
+
+<h2 id="convolutional-neural-netowrk-operations">Convolutional Neural Netowrk operations</h2>
+
+<p>CNNs are neural networks that apply the concept of patching, and are able to learn from spatial numerical arrays. <strong>The word <em>Convolutional</em> is a way too say that this neural network architecture handles cross-correlated 2D arrays of numbers.</strong></p>
+
+<p>Three CNN core operations are:</p>
+
+<ol>
+  <li>Convolution.</li>
+  <li>Apply a non-linear filter, often ReLU.</li>
+  <li>Pooling: a downsampling operation that allows to scale down the size of each feature map.</li>
+</ol>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_CNN.png" alt="" /></p>
+
+<p><strong>1. Convolution, or Convolutional Operations.</strong></p>
+
+<p>The operation described in the above section. Each neuron takes <strong>only the input from the patch</strong>, computes the weighted sum, and applies bias that passes through a non-linear function (as usual in NN). Every neuron takes a different shifted patch.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_feature_map.gif" alt="" /></p>
+
+<p>Take into account that there are not only one feature map in the neural network. <strong>A feature map is specific for a feature</strong>. As images have multiple features, multiple feature map or layers are needed.</p>
+
+<p>Think about a human portrait. Taking only the feature <em>“oval shape of the face”</em> the algorithm could confuse a potato as a human face, as is oval as well.</p>
+
+<p>By applying multiple filters, or layers, the CNN learns hierarchically from the features in an image.</p>
+
+<p><strong>2. ReLU filter.</strong></p>
+
+<p>After each convolutional operation, it needed to apply a ReLU activation function to the output volume of that layer.</p>
+
+<p><strong>Why using a ReLU activation function?</strong></p>
+
+<p>For any given neuron in the hidden layer, there are two possible (fuzzy) cases: either that neuron is relevant, or it isn’t. We need a function that shuts down the non-relevant neurons that do not contain a positive value.</p>
+
+<p>ReLU replaces all the negative values with zero and keeps all the positive values with whatever the value was.</p>
+
+<p>Think it this way: if the output of the convolutional operation is negative it means that the sample image patch doesn’t look similar to the real image patch. We don’t care how different it looks (how negative is the output), we only want that this neuron is not taken into account to train the model.</p>
+
+<p>ReLU is also computationally cheap in comparison with other non-linear functions. It involves only a comparison between its input and the value 0.</p>
+
+<p><strong>3. Pooling.</strong></p>
+
+<p>Pooling is an operation to <strong>reduce the dimensionality</strong> of the inputs while still <strong>preserving spatial invariants</strong>. For example, a MaxPool2D takes a 4x4 patch matrix and convert it into a 2x2 patch by taking only the maximum value of each patch:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_maxpool.png" alt="" /></p>
+
+<h2 id="convolutional-neural-netowrka-for-image-classification">Convolutional Neural Netowrka for Image Classification</h2>
+
+<p>Using CNNs for image classification can be broken down into 2 parts: learning and classification.</p>
+
+<p><strong>1. Feature learning.</strong></p>
+
+<p>The convolutional, ReLU and pooling matrix operations, the model to learn the features from an images. These feature maps get the important features of an image in the shape of weighted 2D arrays.</p>
+
+<p>For example, a CNN architecture can learn from a set of images of cars and then distinguish between <em>car</em> features and <em>not car</em> features using the three key operations, but is still unable to classify images into labels.</p>
+
+<p><strong>2. Classification part.</strong></p>
+
+<p><strong>The second part of the CNN structure is using a second normal MPL to classify the label of the image</strong>. After capturing the features of a car by convolutional operations and pooling, the lower-dimensional feature arrays feed this neural network to perform the classification.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L3_CNN_classification_prob.png" alt="" /></p>
+
+<p><strong>Why not using a second CNN structure or any other NN complex architecture?</strong></p>
+
+<p>Because you don’t need a neural network that handle sense of space or cross-corrlation for this task. It is a simple classification task. The inputs are not even an image anymore, they are features coded as number vectors. They don’t need patching.</p>
+
+<p><strong>Softmax function</strong></p>
+
+<p>Given that the classification is into more than one category, the neural network output is filtered with a <strong>softmax non-linear function to get the results in terms of probabilities</strong>. The output of a softmax represents a categorical probability distribution. Following the car classification example, if the input image is a car it could give a 0.85 probability of being a car,  0.05 of being a van, a 0.01 of being a truck, and so forth.</p>
+
+<h2 id="code-example">Code example</h2>
+
+<p>CNN “vehicle classifier” in Tensorflow:</p>
+
+<p><strong><em>filters</em></strong> refers to the number of feature maps. For the first layer we set 32 feature maps, for the second 64.</p>
+
+<p><strong><em>kernel_size</em></strong> refers to the height and width of the 2D convolution window. 3 means 3x3 pixel window patching.</p>
+
+<p><strong><em>strides</em></strong> refers to how far the pooling window moves for each pooling step. With stride 2, the neurons moves in 2x2 pixels windows.</p>
+
+<p><strong><em>pool_size</em></strong> refers to the window size over which to take the maximum when calculating the pooling operation. With 2, it will take the max value over a 2x2 pooling window.</p>
+
+<p><strong><em>units</em></strong> refers to the number of outputs. 10 lasting outputs representing the 10 classes of vehicles.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="n">tf</span>
+
+<span class="k">def</span> <span class="nf">vehicles_classifier_CNN</span><span class="p">():</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">Sequential</span><span class="p">([</span>
+
+  <span class="c1">########First part: Feature learning ########
+</span>
+  <span class="c1">## CONVOLUTION + RELU
+</span>  <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+                        <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                        <span class="n">activation</span> <span class="o">=</span> <span class="s">'relu'</span><span class="p">),</span>
+  <span class="c1">## POOLING
+</span>  <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="mi">2</span><span class="p">),</span>
+  <span class="c1">## CONVOLUTION + RELU
+</span>  <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+                        <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                        <span class="n">activation</span> <span class="o">=</span> <span class="s">'relu'</span><span class="p">),</span>
+  <span class="c1">## POOLING
+</span>  <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="mi">2</span><span class="p">),</span>
+
+  <span class="c1">######## Second part: Classification ########
+</span>
+  <span class="c1">## FLATTEN
+</span>  <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">Flatten</span><span class="p">(),</span>
+  <span class="c1">## FULLY CONNECTED
+</span>  <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">'relu'</span><span class="p">),</span>
+  <span class="c1">## SOFTMAX
+</span>  <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">'softmax'</span><span class="p">)</span>
+  <span class="p">])</span>
+
+  <span class="k">return</span> <span class="n">model</span>
+
+</code></pre></div></div>
+:ET

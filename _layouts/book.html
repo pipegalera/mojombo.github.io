@@ -1,0 +1,22 @@
+---
+layout: default
+---
+
+<div>
+  <div class="title">
+    <a class="extra" href="/">&larr; back to site home</a>
+  </div>
+</div>
+
+<div id="post">
+{{ content }}
+</div>
+
+<div id="related">
+  <h2>Previous Posts</h2>
+  <ul class="posts">
+    {% for post in site.categories.book_notes limit:3 %}
+      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+</div>

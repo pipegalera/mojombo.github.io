@@ -1,0 +1,95 @@
+I"� <h1 id="mit-6s191---lecture-6---deep-learning-limitations-and-new-frontiers">MIT 6.S191 - Lecture 6 - Deep Learning Limitations and New Frontiers</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>The rise and hype of Deep Learning led to the general public to see Machine Learning, Deep Learning, and the whole AI field like some kind of <strong>alchemy</strong>. Any problem in which we have data can be solved by AI. The reality is that only very specific problems can be solved by AI, and feeding poor data in a random network architecture will produce no value at all.</p>
+
+<p><strong>What Deep Learning is good at?</strong></p>
+
+<p>Deep Neural Networks are extremely good at finding a pattern <strong>in the existing data</strong>. A recent paper by Google Brain/Deepmind researchers<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> shows that a neural network can be 100% accurate fed <strong>by random label images</strong>:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L6_understanding.png" alt="" />
+<img src="/images/MIT_deep_learning_intro/L6_understanding_1.png" alt="" /></p>
+
+<p>A model is as good as the data you feed it. If you have trained a model with a banana image and a tree image labeled as “dog”, every time that the model sees <strong>those exact images</strong> it will classify them as the label you have used. The problem comes when it sees other banans or tree images. The accuracy could be 100% in the training set and close-to-random accuracy in the test set:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L6_understanding_2.png" alt="" /></p>
+
+<p>Random labeling led to random accuracy in the test data. The model overfitted the specific images to the specific label and has <strong>no generalization power</strong> to predict new unseen data. <strong>Without generalization, any neural network is worthless.</strong> A Neural Network can approximate any seen distribution, but how do we know what and how it is going to predict in unseen data?</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L6_approximation.png" alt="" /></p>
+
+<h2 id="limitations-uncertainty">Limitations: Uncertainty</h2>
+
+<p>Part of the new frontiers in AI tries to solve <strong>the problem of uncertainty</strong>. Or how to make models that infer the right choice when it faces data that it has not being trained to interact with. For example, this is especially important in the field of autonomous vehicles, in which a change in the construction of a road can lead to terrible results:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L6_uncertainty.png" alt="" /></p>
+
+<p>Autonomous cars should be able to identify this <strong>uncertainty</strong> or unseen state of the road and not crash the car, even if the car is being trained to go in that direction.</p>
+
+<p>Let’s take the classical toy model of <strong>classifying an image of a dog vs cat</strong>. The model takes only inputs of cat and dog images and returns the probability of being a cat vs a dog. What happens if we ask the model to predict an image of a dog and a cat together? What happens if we ask the model to predict the probability of a cat/dog feeding the image of a horse?</p>
+
+<p>By definition, <strong>the model gives just the probability of dog and cat</strong>. It cannot output the probability of random data or the confidence in that prediction.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L6_horse.png" alt="" /></p>
+
+<p>We need an uncertainty metric to assess the noise inherent to the data (<em>aleatoric uncertainty</em>) and to <strong>assess the network’s confidence</strong> in its predictions (<em>epistemic uncertainty</em>).</p>
+
+<h2 id="frontiers-evidential-neural-networks">Frontiers: Evidential Neural Networks</h2>
+
+<p>New reseach<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup> using <em>adversarial attacks</em> tries to introduce perturbations into the data so the networks it is <strong>not only optimized by modifying the weights but also optimized by modifying the input images</strong>. Given an input, the network is trained to predict the parameters of what they called an evidential distribution.</p>
+
+<p>The network can model a higher-order probability distribution over the individual likelihood parameters. Taking the cat/dog model example, this means that a network trained with photos of cats and dogs and fed with a horse image can output
+cat probability of 0 and a dog probability of 0.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L6_deep_regression.png" alt="" /></p>
+
+<p>Evidential regression simultaneously learns a continuous target along with aleatoric
+uncertainty from the data and epistemic uncertainty from the model.</p>
+
+<h2 id="frontiers-automated-machine-learning">Frontiers: Automated Machine Learning</h2>
+
+<p>Standard deep neural networks are optimized <strong>for a single task</strong>. It often requires expert knowledge to build an architecture for any task. What if we could build a learning algorithm or system that <strong>learns which model</strong> to use to solve a given problem?</p>
+
+<p>Automated Machine Learning (AutoML) is a growing field of AI<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup> that uses autodetection of network architectures, so it relies less on human choice and expertise as it learns the model architectures directly on the dataset of interest.</p>
+
+<p>The <strong>concept</strong> of this method is simple to understand. It is a system <strong>has a <em>controller network</em> and a <em>child network</em></strong>. The controller samples an initial architecture and the child uses that architecture in a dataset. For every architecture sample, the child network gets an accuracy value that is used to update the controller.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L6_autoML.png" alt="" /></p>
+
+<p>The better the architecture and parameters proposed by the controller is, the better the results of the child network, and the more the controller knows is getting good architecture proposals.</p>
+
+<p>This last step is key. <strong>How the controller learns?</strong></p>
+
+<p>The controller is a Recurrent Neural Network, with <em>N</em> layers corresponding to different architectures and parameters to choose from. One layer represents a combination of model/parameters to try.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L6_autoML_1.png" alt="" /></p>
+
+<ol>
+  <li>The controller samples these different networks with a parametrization.</li>
+  <li>The controller feed variations to the child network.</li>
+  <li>The child produces an accuracy <em>R</em> that is used to train the weights of the controller.</li>
+  <li>Once it has the best parameter, the one with better accuracy in the child network, that layer is optimized and jumps to the next one.</li>
+  <li>Repeat until all the layers (parameters) converge.</li>
+</ol>
+
+<p>While AutoML can be seen as a shortcut, <strong>this system can produce state-of-the-art results</strong><sup id="fnref:3:1" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup> in image recognition, getting better results and being more efficient than human-created network architectures:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L6_autoML_2.png" alt="" /></p>
+
+<p><em>NASNet</em> stands for <em>Neural Architecture Search Network</em></p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>C. Zhang et al. (2016) - Understanding deep learning requires rethinking generalization: https://arxiv.org/abs/1611.03530 <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>A Amini et al. (2019) - Deep Evidential Regression: https://arxiv.org/abs/1910.02600 <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:3" role="doc-endnote">
+      <p>B. Zoph (2017) - Learning Transferable Architectures for Scalable Image Recognition: https://arxiv.org/abs/1707.07012 <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:3:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a></p>
+    </li>
+  </ol>
+</div>
+:ET

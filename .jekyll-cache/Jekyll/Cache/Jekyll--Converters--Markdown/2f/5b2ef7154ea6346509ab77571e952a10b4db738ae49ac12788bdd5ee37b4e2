@@ -1,0 +1,226 @@
+I"#9<h1 id="mit-6s191---lecture-1---neural-networks">MIT 6.S191 - Lecture 1 - Neural Networks</h1>
+
+<h2 id="perceptron">Perceptron</h2>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_perceptron.png" alt="" /></p>
+
+<p>If we denote \(\hat{y}\) as the output:</p>
+
+\[\begin{array}{c}
+\hat{y}=g\left(w_{0}+\sum_{i=1}^{m} x_{i} w_{i}\right)
+\end{array}\]
+
+<p>Being \(g\) , for example, a Sigmoid, Tangent or ReLU function:</p>
+
+\[g(z)=\frac{1}{1+e^{-z}} \quad , \quad g(z)=\frac{e^{z}-e^{-z}}{e^{z}+e^{-z}} \quad , \quad g(z)=\max (0, z)\]
+
+<p>The purpose of activation functions is to introduce non-linearity into the network:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_linear.png" alt="" /></p>
+
+<p>Linear activation functions produce linear decisions no matter the network size while non-linearities allow approximating arbitrarily complex functions.</p>
+
+<h2 id="neural-networks">Neural Networks</h2>
+
+<p>Taking the previous perceptron and simplifying the output to be \(z\):</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_image2.png" alt="" /></p>
+
+<p>We can try with different weights, that would produce different outputs \(z_1\) and \(z_2\):</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_image3.png" alt="" /></p>
+
+<p>Neural Network is made stacking those different outputs. Notice that this is just a stack of dot products of the same features and different weights (\(W^{(1)}\)).</p>
+
+<p>These outputs in the hidden layer have a different range of values, but there are only 2 possible final outputs: \(\hat{y_1}\) and \(\hat{y_2}\).</p>
+
+<p><strong>How we classify a label as \(\hat{y_1}\) or \(\hat{y_2}\).?</strong></p>
+
+<p>In this step the non-linear or transformation function \(g\) trigger the outcomes to being one or the other.</p>
+
+<ul>
+  <li>
+    <p>If the outcome value is more than the function threshold, the outcome is transformed to 1 (the label of \(\hat{y_1}\)).</p>
+  </li>
+  <li>
+    <p>If the value is less than the threshold, the outcome is transformed to 0 (the label of \(\hat{y_2}\)).</p>
+  </li>
+</ul>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_network.png" alt="" /></p>
+
+<p>Neural Network application in Tensorflow:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="n">tf</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">Sequential</span><span class="p">([</span>
+        <span class="c1"># Hidden layers with n neurons
+</span>        <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+        <span class="c1"># Output layer with 2 neurons
+</span>        <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">])</span>
+</code></pre></div></div>
+
+<p><em>Dense</em> means that the layers are fully connected, all the neuron’s weight counts in the dot product calculation.</p>
+
+<h2 id="forward-propagation-in-matrix-notation-extra-explanation">Forward propagation in Matrix notation (extra explanation)</h2>
+
+<p>For example, let’s say that we have 3 observations, we know 2 features of them, and we want to construct a Neural Network with 1 hidden layer containing 3 neurons.</p>
+
+<ul>
+  <li>In a first step (1), we calculate manually the dot product of \(X\) and \(W^{(1)}\):</li>
+</ul>
+
+\[Z = XW^{1}\]
+
+<p><strong>The shape of \(Z\) is always a product of: <em>(observations, features) x (features, n neurons in the layer)</em></strong>.</p>
+
+<p>The columns of the first element have to be equal to the rows of the second element. It is necessary for matrix calculation.</p>
+
+<ul>
+  <li>The second step (2), we take the outputs of the hidden layer, apply the non-linear transformation, and calculate the dot product with respect to the second layer of weights:</li>
+</ul>
+
+\[\hat{y} = g(Z)W^{2}\]
+
+<p>Here is an example of how to calculate \(\hat{y}\) using the dot product for a made-up dataset:</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_matrix.jpg" alt="" /></p>
+
+<p>The final output is 3 predictions (<em>real numbers</em>) for the 3 observations. Imagine that all the notations denoted with \(w\) are constants chosen randomly. Then, every matrix product is also constants as the only variable that is an incognita are these weights.</p>
+
+<p>Weight updating is made by the network by backward propagation (later explained).</p>
+
+<h2 id="deep-neural-networks">Deep Neural Networks</h2>
+
+<p>To make a Neural Network deep, we just add more layers. The number of layers and the number of neurons of each layer has to be defined beforehand (parameters to optimize) by us, humans. The model is only tunning the weights.</p>
+
+<p>Neural Network application in Tensorflow:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="n">tf</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">Sequential</span><span class="p">([</span>
+        <span class="c1"># Hidden layers with n neurons
+</span>        <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+        <span class="c1"># Hidden layers with n neurons
+</span>        <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+        <span class="c1"># Output layer with 2 neurons
+</span>        <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">])</span>
+</code></pre></div></div>
+
+<h2 id="the-loss-function">The loss function</h2>
+
+<p>Initiating random values of \(W\), will give a prediction. A terrible one, as the model has no idea yet if the prediction is good, or how to measure how good is it.</p>
+
+<p><strong>The measure of how good is a prediction is will be determined by the <em>Loss function</em></strong>.</p>
+
+<p>The “Loss function” measures how bad is the prediction. The final output predictions compares the predicted values with the actual ones:</p>
+
+\[\mathcal{L}\left(f\left(x^{(i)} ; \boldsymbol{W}\right), y^{(i)}\right)\]
+
+<p>The more the difference, the worse the prediction as predicted values are far away from the real ones. We want to minimize the loss function.</p>
+
+<p>On average, for all the \(n\) observations:</p>
+
+\[\boldsymbol{J}(\boldsymbol{W})=\frac{1}{n} \sum_{i=1}^{n} \mathcal{L}\left(f\left(x^{(i)} ; \boldsymbol{W}\right), y^{(i)}\right)\]
+
+<h2 id="training-the-neural-network-gradient-descent-and-backpropagation">Training the Neural Network: Gradient Descent and Backpropagation</h2>
+
+<p>The final goal of every Neural Network is find the weights that achieve the lowest loss:</p>
+
+\[\boldsymbol{W}^{*}=\underset{\boldsymbol{W}}{\operatorname{argmin}} \frac{1}{n} \sum_{i=1}^{n} \mathcal{L}\left(f\left(x^{(i)} ; \boldsymbol{W}\right), y^{(i)}\right)\]
+
+\[\boldsymbol{W}^{*}=\underset{\boldsymbol{W}}{\operatorname{argmin}} J(\boldsymbol{W})\]
+
+<p><strong>How the Neural Network finds the optimal \({W}^{*}\)?</strong></p>
+
+<p>By gradient descent. Gradient descent algorithm:</p>
+
+<ol>
+  <li>Initialize wrights randomly.</li>
+  <li>Compute the gradient.</li>
+  <li>Update the weights according to the direction of the gradient and the learning rate.</li>
+  <li>Loop until convergence 2 and 3.</li>
+  <li>Return optimal weights.</li>
+</ol>
+
+<h2 id="backpropagation">Backpropagation</h2>
+
+<p>In the second step, the algorithm computes the gradient by a process called backpropagation. <strong>Backpropagation is just the efficient application of the chain rule</strong> for finding the derivative of the loss function with respect to the neuron weights.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_backpropagation.png" alt="" /></p>
+
+<p>When training a neural net, the goal is to find neuron parameters (weights) that cause the output of the NN to best fit the data, right? The chain rule is the way the NN can “connect” the loss function and outputs with the weight parametrization.</p>
+
+<ul>
+  <li>
+    <p>If the loss function is less than the previous value using the current weights, then the gradient is in a good direction.</p>
+  </li>
+  <li>
+    <p>If the loss function is more than the previous, it goes in the opposite direction.</p>
+  </li>
+  <li>
+    <p>Repeat until the loss function is zero or cannot make it lower (<em>convergence</em>).</p>
+  </li>
+</ul>
+
+<p>When the Neural Network converged, it found a spot in the loss function that increasing or decreasing the weight values makes the loss function increasing.</p>
+
+<p>Note that it might be the case that the optimal weights are not optimal for the entire loss function space because they converged in a local minimum. In practice, finding the global minimum is very difficult as the algorithm is very prompt to get stuck in these local minimums along the way of convergence.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_gradient_landscape.png" alt="" /></p>
+
+<h2 id="learning-rates">Learning rates</h2>
+
+<p><strong>The learning rate is how much increase the weight in the updating step of the gradient descent.</strong>. If the gradient calculates the direction of the algorithm to find the minimum, the learning rate sets the magnitude of every weight try.</p>
+
+<p>Setting a stable learning rate is key to find the global minimums. It should be large enough that avoid local minimums, but small enough that is not being able to convergence (<strong>Exploding Gradient Problem or Divergence</strong>). Stable learning rates converge smoothly and avoid local minima.</p>
+
+<p>In practice, a usual approach is trying a lot of different learning rates and see what works. A better one is to design an adaptative learning rate that “adapts” to the loss function or landscape. In this second approach, the learning rate is no longer a constant or fixed number but a rate that gets smaller or bigger depending on how large the gradient is, how fast the learning is happening, the size of the particular weights, and so forth.</p>
+
+<p>In Tensorflow, these are called optimizers. They are many learning rate optimizers that make the NN coverage more quickly and generally better such as Adaptive Gradient Algorithm (Adam) or Adadelta.</p>
+
+<p>Optimizers application in Tensorflow:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">optimizers</span><span class="p">.</span><span class="n">Adam</span>
+<span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">optimizers</span><span class="p">.</span><span class="n">Adadelta</span>
+</code></pre></div></div>
+
+<h2 id="batching-and-stochastic-gradient-descent">Batching and Stochastic gradient descent</h2>
+
+<p>When we talked about backpropagation and computing the gradient, I did not mention how computationally expensive this can be. In practice, calculating the chain rule for hundreds of layers using the entire training set every time the algorithm loops is not feasible.</p>
+
+<p><strong>Instead of looping through the entire training set, we can pick a random sub-sample of the data. This process is also called <em>Batching</em></strong> as it divides the training sets into small batches of data that feed the NN. The gradient computation is passed only through a small batch of data \(B\):</p>
+
+\[\frac{\partial J(W)}{\partial W}=\frac{1}{B} \sum_{k=1}^{B} \frac{\partial J_{k}(W)}{\partial W}\]
+
+<p>Then the weights are updated accordingly and the process starts again with another sub-sample or batch.</p>
+
+<p><strong>This process is called <em>Stochastic gradient descent</em>, as it replaces the actual gradient (calculated from the entire data set) by an estimate thereof (calculated from a randomly selected subset of the data).</strong></p>
+
+<h2 id="regularization">Regularization</h2>
+
+<p>A technique that <strong>constrains the optimization problem</strong> to discourage complex models to avoid overfitting.</p>
+
+<h3 id="regularization-i-dropout">Regularization I: Dropout</h3>
+
+<p><strong>For every iteration, the Neural Network drops a percentage of the neurons.</strong></p>
+
+<p>Using Dropout the Neural Network doesn’t rely on a pathway or very heavy weighting on certain features and overfitting, making the Neural Network more prompt to generalize to new data.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_dropout.png" alt="" /></p>
+
+<p>Dropout regularization in Tensorflow:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="regularization-ii-early-stopping">Regularization II: Early stopping</h3>
+
+<p>First, we monitor the process of minimizing the loss function of training and testing data at the same time.</p>
+
+<p>When the loss function starts increasing in the test data (more difference between predicted and real outputs), stop the Neural Network.</p>
+
+<p><img src="/images/MIT_deep_learning_intro/L1_early_stopping.png" alt="" /></p>
+:ET

@@ -1,0 +1,369 @@
+I"òh
+<p>================</p>
+
+<h2 id="competition-mechanics">Competition mechanics</h2>
+
+<p>Places To compete:</p>
+
+<ul>
+  <li>
+    <p><a href="https://www.kaggle.com/competitions">Kaggle</a></p>
+  </li>
+  <li>
+    <p><a href="https://www.drivendata.org/competitions/">DataDriven</a></p>
+  </li>
+  <li>
+    <p><a href="https://www.crowdanalytix.com/community">Crowdanalytix</a></p>
+  </li>
+  <li>
+    <p><a href="https://competitions.codalab.org/">CodaLab</a></p>
+  </li>
+  <li>
+    <p><a href="https://bitgrit.net/competition/">Brigit</a></p>
+  </li>
+</ul>
+
+<p><strong>Why to participate</strong>:</p>
+
+<ul>
+  <li>Network.</li>
+  <li>Way to try state of the art approaches.</li>
+  <li>Get notoriety in Data Science field.</li>
+</ul>
+
+<p><strong>Real-world ML Pipeline</strong>:</p>
+
+<ul>
+  <li>Understanding business problems (Big picture).</li>
+  <li>Problem formalization. What is the target metric? How to measure the accuracy?</li>
+  <li>Data collecting.</li>
+  <li>Data preprocessing.</li>
+  <li>Modelling.</li>
+  <li>Evaluate the model using updated data.</li>
+  <li>Deploy the model.</li>
+</ul>
+
+<p><strong>Competition Pipeline</strong>:</p>
+
+<ol>
+  <li>Data Preprocessing.</li>
+  <li>Modelling.</li>
+</ol>
+
+<h2 id="recap-of-main-ml-algorithms">Recap of main ML algorithms</h2>
+
+<p>Families of ML algorithms:</p>
+
+<ul>
+  <li>Linear (Logistical regression or SVM)</li>
+  <li>Tree-based (Decision Trees, Random Forest, XGB)</li>
+  <li>k-Nearest Neighbors</li>
+  <li>Neural Networks</li>
+</ul>
+
+<p><img src="/images/HSE - Kaggle/L1_algos_visually.jpg" alt="" /></p>
+
+<p>For a rule of thumb, follow sklearn route-map:</p>
+
+<p><img src="https://scikit-learn.org/stable/_static/ml_map.png" alt="" /></p>
+
+<h2 id="feature-preprocessing-scaling-numeric-features">Feature preprocessing: Scaling Numeric features</h2>
+
+<p>Feature preprocessing and <strong>feature generation is necessary to win competitions</strong>.</p>
+
+<p>Scaling is another hyperparameter to optimize, different scaling techniques result in different model predictions. <strong>Tree-based models do not depend on scaling</strong>.</p>
+
+<p>Linear and neural networks require scaling preprocessing to perform well. Linear models experience difficulties with differently scaled features, and gradient descent methods do not converge easily without scaling.</p>
+
+<p><strong>1. MinMaxScaler</strong></p>
+
+<p>It scales every feature from 1 (the maximum feature number) to 0 (the minimum).</p>
+
+\[X = \frac{(X - min())}{X.max()- X.min()}\]
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sklearn</span><span class="p">.</span><span class="n">preprocessing</span><span class="p">.</span><span class="n">MinMaxScaler</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">data_scaled</span> <span class="o">=</span> <span class="n">sc</span><span class="p">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p><strong>2. StandardScaler</strong></p>
+
+<p>It normalizes every feature to have a mean 0 and a standard deviation of 1.</p>
+
+\[X = \frac{(X - mean())}{X.std()}\]
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sklearn</span><span class="p">.</span><span class="n">preprocessing</span><span class="p">.</span><span class="n">StandardScaler</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">data_scaled</span> <span class="o">=</span> <span class="n">sc</span><span class="p">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>In non-tree models, the type of feature scaler leads to similar results. In K-NN however, it is important.</p>
+
+<p><strong>3. Winsorization</strong></p>
+
+<p>The pattern of linear models can be affected by the weight of outliers:</p>
+
+<p><img src="/images/HSE - Kaggle/L1_outliers.png" alt="" title=" " /></p>
+
+<p>To &#8220;protect&#8221; the trend from the effect of outliers, we can clip the data among a certain threshold. For example, keep only the 1st percentile as the lower bound and the 99th percentile as the upper bound, and getting rid of all the other observations (winsorization).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Set the thresholds
+</span><span class="n">Upperbound</span><span class="p">,</span> <span class="n">Lowerbound</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">99</span><span class="p">])</span>
+<span class="c1"># Clip the data
+</span><span class="n">data_clipped</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">clip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Upperbound</span><span class="p">,</span> <span class="n">Lowerbound</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Other option:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">scipy.stats.mstats</span> <span class="kn">import</span> <span class="n">winsorize</span>
+
+<span class="n">data_clipped</span> <span class="o">=</span> <span class="n">winsorize</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">limits</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>4. Rank Transformation</strong></p>
+
+<p>Rank transform removes the relative distance between feature values and replaces them with a consistent interval representing feature value ranking. It &#8220;moves&#8221; the outliers closer to other feature values.</p>
+
+<p>It is an easy way to dealing with outliers when the dataset is too large to handle outliers manually.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rankdata</span>
+
+<span class="n">data_array</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">data_array_ranked</span> <span class="o">=</span> <span class="n">rankdata</span><span class="p">(</span><span class="n">data_array</span><span class="p">)</span>
+
+<span class="c1"># Output of print(data_array_ranked)
+</span><span class="n">array</span><span class="p">([</span> <span class="mf">1.</span> <span class="p">,</span>  <span class="mf">2.5</span><span class="p">,</span>  <span class="mf">4.</span> <span class="p">,</span>  <span class="mf">2.5</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p><strong>5. Logistical Transformation and Raising to the power of &lt;1</strong></p>
+
+<p>Help especially in Neural Networks.</p>
+
+<p>Visually:</p>
+
+<p><img src="/images/HSE - Kaggle/L1_log_transform.png" alt="" title=" " /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Log transformation of a column feature
+</span><span class="n">data</span><span class="p">[</span><span class="s">'feature_log_transformed'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'feature'</span><span class="p">])</span>
+
+<span class="c1"># Raising a column feature to the power of 2/3
+</span><span class="n">data</span><span class="p">[</span><span class="s">'feature_raised'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">power</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'feature'</span><span class="p">],</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="feature-preprocessing-encoding-categorical-features">Feature preprocessing: Encoding Categorical features</h2>
+
+<p>Categorical and numerical features can be both numbers. For example, the rank in the last <em>Football UEFA Championship</em> (categorical: 1st,2nd,3rd or 4th) and the number of goals (numerical: 12,9, or 5) of a given team.</p>
+
+<p><strong>Why convert categorical a column to a numerical one, if already is a number?</strong></p>
+
+<p>Because of the distance between the numerical numbers. The difference between 1 and 2 is always 1, but what&#8217;s the difference between the first and the second? The second is twice, three times worse than the 1st? Not even a 20% worse?</p>
+
+<p>Categories are different features of the data, even if they are also numbers.</p>
+
+<h2 id="label-encoders">Label encoders</h2>
+
+<p>We need to convert categorical values into categories on its own. Most models cannot handle text or categories without being encoded in numerical values.</p>
+
+<p><strong>1. Label Encoding for linear models, k-NN, and Neural Networks</strong></p>
+
+<p>The most usual way:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
+</code></pre></div></div>
+
+<p>For the hot encoder, we have to take care that the categories don&#8217;t have too many unique values, as it will create a new feature for every unique value. It can lead to worse performance in tree models.</p>
+
+<p><strong>2. Label Encoding for Tree-based models</strong></p>
+
+<p>Apart from the usual label encoders, we can create an encoding that preserves the distribution of the categories, instead of using integers:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dist_encoder</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">'categoty'</span><span class="p">).</span><span class="n">size</span><span class="p">()</span>
+<span class="n">dist_encoder</span> <span class="o">=</span> <span class="n">dist_encoder</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s">'new_category'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'category'</span><span class="p">].</span><span class="nb">map</span><span class="p">(</span><span class="n">dist_encoder</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>For example, let&#8217;s imagine a category representing education: Elementary, High School, University. 30% of the people only have elementary school achieved, 45% High school and 25% University. Then:</p>
+
+<p>The Elementary category is replaced by 0.3, High School by 0.45, and University by 0.25.</p>
+
+<p><strong>If the value frequency is correlated with the target value, this new category would help both linear and tree-based models</strong></p>
+
+<p>What if the within the categories, 2 have the same distribution?</p>
+
+<p>We can use scipy.stats.rankdata. More information <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rankdata.html">here</a></p>
+
+<h2 id="feature-generation">Feature generation</h2>
+
+<p>Feature generation relies hugely on the <strong>understanding of the data</strong>. This is especially what differentiates a great competitor from a good one. Based on exploratory data analysis and prior knowledge of the problem, new features can be created.</p>
+
+<p>For example, let&#8217;s say that the objective is predicting if a house will be sold within a month.  We have the features: <em>Squared area</em>, and <em>price</em> of several houses. A new feature can be created: <em>price per squared meter</em>.</p>
+
+<p>Another example, predicting the amount of sold items among different grocery items. If we have the price, we can create a feature &#8220;fractional_part&#8221; that captures the psychological effect of reducing the lef digits by 1 unit:</p>
+
+<p><img src="/images/HSE - Kaggle/L1_one_unit.png" alt="" title=" " /></p>
+
+<p>Any logical relationship between the variables can help the algorithm (even tree models) to converge more easily.</p>
+
+<h2 id="creating-an-interaction-between-several-categorical-features">Creating an interaction between several categorical features</h2>
+
+<p>The algorithm can adjust for the combination of features to get better results. For example, it might be the case that for the survival in the Titanic disaster it mattered to be women as they go into the rescue boats first. But, if they are in the lowest class, it doesn&#8217;t matter (<em>pclass</em> = 3).</p>
+
+<p>Hot encoding a combination of features can adjust the probability of survival better.</p>
+
+<p><img src="/images/HSE - Kaggle/L1_interaction_cat.png" alt="" title=" " /></p>
+
+<p>One of the most useful feature creation in non-tree-based models (linear, k-NN, NNs).</p>
+
+<h2 id="datetime">Datetime</h2>
+
+<p>We can use dates to generate features. The more features will be related to:</p>
+
+<p><strong>1. Periodicity</strong>
+<strong>2. Time since a particular event</strong>
+<strong>3. Difference between dates</strong></p>
+
+<p>For example, with sales prediction over a period of time, we can add a column with the days since a certain campaign, if the day was a holiday, or the days until the holiday comes:</p>
+
+<p><img src="/images/HSE - Kaggle/L1_datetime_table.png" alt="" title=" " /></p>
+
+<p>Using the difference between the last purchase and the last call to the customer service, as a new feature (difference between dates).</p>
+
+<h2 id="coordinates">Coordinates</h2>
+
+<p>It is useful to use the map coordinates to generate new features for tasks where the objective involves coordinates. For example, to predict housing prices it is useful to generate new features such as:</p>
+
+<ul>
+  <li>The distance to the closest hospital, school, monument, park&#8230;</li>
+  <li>The distance to the highest-priced house in the neighborhood.</li>
+  <li>The cluster price of the nearest 10 houses.</li>
+</ul>
+
+<h2 id="handling-missing-values">Handling missing values</h2>
+
+<p class="mark"> Tip: Avoid filling NaN before feature generation. </p>
+
+<p><strong>Locating missing values</strong>: plot the distribution of the columns and see the values way outside of the tails.</p>
+
+<p>The choice of method to fill NaN depends on the situation. Filling missing values <strong>strategies</strong>:</p>
+
+<p><strong>1. Tree models</strong>: Filling with a constant value like -999  would take the missing value into a separate category. When you calculate the means of the feature, take into account that you have done this filling method.</p>
+
+<p><strong>2. Linear models and Neural Network</strong>s: fill with the mean or median. This has to be taken carefully. If the function that we try to approximate is not linear, it will fill the missing values with no better than random numbers.</p>
+
+<p><strong>3. Create an &#8220;Isnull&#8221; feature</strong>: keep the missing values, and create a boolean column called &#8220;isnull&#8221;.</p>
+
+<p><strong>4. Low-hanging fruit reconstructions</strong>: if possible, you can interpolate the value using the close-by data points.</p>
+
+<p><strong>5. Model reconstruction</strong>: train a model to predict missing values.</p>
+
+<h2 id="bag-of-words">Bag of words</h2>
+
+<p><img src="/images/HSE - Kaggle/L1_bag_words.png" alt="" title=" " /></p>
+
+<p>Transforming sentences into an array of values:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfTransformer</span><span class="p">,</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
+<span class="n">text_example</span> <span class="o">=</span> <span class="p">[</span><span class="s">"(excited) Hi everyone!"</span><span class="p">,</span>
+                <span class="s">"I'm so excited about this course"</span><span class="p">,</span>
+                <span class="s">"So excited. SO EXCITED. EXCITED, I AM!"</span><span class="p">]</span>
+
+<span class="c1"># CountVectorizer instance
+</span><span class="n">count_vect</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+
+<span class="c1"># Fit the data
+</span><span class="n">text_vector</span> <span class="o">=</span> <span class="n">count_vect</span><span class="p">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">text_example</span><span class="p">)</span>
+
+<span class="c1"># Create dataframe
+</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">text_vector</span><span class="p">.</span><span class="n">toarray</span><span class="p">(),</span>
+                  <span class="n">columns</span> <span class="o">=</span> <span class="n">count_vect</span><span class="p">.</span><span class="n">get_feature_names</span><span class="p">())</span>
+</code></pre></div></div>
+
+<h2 id="tfidftransformer">TfidfTransformer</h2>
+
+<p><strong>TF</strong> means term-frequency while <strong>TF-IDF</strong> means term-frequency times inverse document-frequency.</p>
+
+<p><strong>TF normalizes the sum of the row values to 1, while IDF scales features inversely proportionally to the number of word occurrences over documents.</strong></p>
+
+<p>This is a common term weighting scheme in information retrieval, that has also found good use in document classification.</p>
+
+<p>Example:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># TfidfVectorizer instance
+</span><span class="n">tfidf_vect</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">()</span>
+
+<span class="n">text_vector_tfidf</span> <span class="o">=</span> <span class="n">tfidf_vect</span><span class="p">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">text_example</span><span class="p">)</span>
+
+<span class="n">df_2</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">text_vector_tfidf</span><span class="p">.</span><span class="n">toarray</span><span class="p">(),</span>
+                  <span class="n">columns</span> <span class="o">=</span> <span class="n">tfidf_vect</span><span class="p">.</span><span class="n">get_feature_names</span><span class="p">())</span>
+</code></pre></div></div>
+
+<h2 id="word-processing-and-text-normalization">Word processing and text normalization</h2>
+
+<p>The argument <strong>ngram_range</strong> allows to create more columns for word combination. For example, seting <em>count_vect = CountVectorizer(ngram_range= [1,3])</em> creates the column <em>about</em> (unigram) but also <em>about this</em> (bigram) and <em>about this course</em> (trigram).</p>
+
+<p>Is also important the argument <strong>stop_words</strong>, that would remove the words in the vocabulary that do not add important information or meaning to the sentence such as <em>I, am, you, the&#8230;</em></p>
+
+<p><strong>Stemming</strong> can be used to group the same stem words into the same column. Stemming is the process of reducing inflection in words to their root forms such as <strong>mapping a group of words to the same stem</strong>. It can analyze invented words, slang, or words without a morphological root, but also chops short words to meaningless stems (<em>saw** and *see** reduced to *s</em>)</p>
+
+<p><strong>Lemmatization</strong> is used for the same, and it is almost the same in practical terms. In Lemmatization root word is called Lemma. With lemmatization <strong>each column returns an actual word of the language</strong>, it is used where it is necessary to get valid word. (<em>saw</em> and <em>see</em> reduced to <em>see</em>, <em>BRRRRR</em> reduced to no column as it doesn&#8217;t have a grammatical root.)</p>
+
+<h2 id="word2vec">Word2Vec</h2>
+
+<p>The word2vec <strong>algorithm uses a two-layer neural network model to learn word associations from a large corpus of text.</strong></p>
+
+<p>Word2vec takes as its input a large corpus of text and produces a vector space, typically of several hundred dimensions, with each unique word in the corpus being assigned a corresponding vector in the space.</p>
+
+<p><img src="/images/HSE - Kaggle/L1_word2vec.png" alt="" title=" " /></p>
+
+<p>Example in python:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">w2v_model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span><span class="n">min_count</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                     <span class="n">window</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                     <span class="n">size</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                     <span class="n">sample</span><span class="o">=</span><span class="mf">6e-5</span><span class="p">,</span>
+                     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span>
+                     <span class="n">min_alpha</span><span class="o">=</span><span class="mf">0.0007</span><span class="p">,</span>
+                     <span class="n">negative</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                     <span class="n">workers</span><span class="o">=</span><span class="n">cores</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">w2v_model</span><span class="p">.</span><span class="n">build_vocab</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">progress_per</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="c1"># 'sentences' variable is a vector of words
+</span><span class="n">w2v_model</span><span class="p">.</span><span class="n">train</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span>
+                <span class="n">total_examples</span><span class="o">=</span><span class="n">w2v_model</span><span class="p">.</span><span class="n">corpus_count</span><span class="p">,</span>
+                <span class="n">epochs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                <span class="n">report_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">w2v_model</span><span class="p">.</span><span class="n">wv</span><span class="p">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="s">"Random_Word_from_Sentences"</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h2 id="pre-trained-neural-networks-cnn">Pre-trained Neural Networks (CNN)</h2>
+
+<p>Neural networks are initialized with random weights (usually) that after a series of epochs reach some values that allow us to properly classify our input images.</p>
+
+<p>What would happen if we could initialize those <strong>weights to certain values that we know beforehand that are already good to classify</strong> a certain dataset?</p>
+
+<p>Using a pre-trained model we can take advantage of the <em>better than random</em> weighting of the model in other datasets (transfer learning).</p>
+
+<p>With fine-tuning, it is not necessary to go through the trial and error of how many layers to use, how many neurons in each layer, which regularization or learning rate to use&#8230;you <strong>take a Neural Network architecture already defined in another task for the new task.</strong></p>
+
+<p>Giving that the task is different (instead of classifying let&#8217;s say cars, it classifies trucks), the last layer of the pre-trained model is replaced by a new one designed for the new task. Only the weights of the new layers are updated.</p>
+
+<p>Pre-trained models can be found on keas website: https://keras.io/api/applications/</p>
+
+<p>For example:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">applications</span><span class="p">.</span><span class="n">DenseNet121</span><span class="p">(</span>
+    <span class="n">include_top</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">weights</span><span class="o">=</span><span class="s">"imagenet"</span><span class="p">,</span>
+    <span class="n">input_tensor</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">input_shape</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">pooling</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div>
+:EF

@@ -1,0 +1,789 @@
+I"<h1 id="fastbook---chapter-6---other-computer-vision-problems">Fastbook - Chapter 6 - Other Computer Vision Problems</h1>
+
+<p>In this chapter, we are going to look at two other types of computer vision problems:</p>
+
+<ul>
+  <li>Multi-label classification and;</li>
+  <li>Regression.</li>
+</ul>
+
+<p>I will use Google Colab to run the code, as in <a href="http://localhost:1313/today-i-learned-posts/fastbook-chapter5-image_classification/">Chapter 5 notes</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">Uqq</span> <span class="n">fastbook</span>
+
+     <span class="o">|</span><span class="err">████████████████████████████████</span><span class="o">|</span> <span class="mi">727</span><span class="n">kB</span> <span class="mf">29.0</span><span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+     <span class="o">|</span><span class="err">████████████████████████████████</span><span class="o">|</span> <span class="mf">1.2</span><span class="n">MB</span> <span class="mf">45.6</span><span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+     <span class="o">|</span><span class="err">████████████████████████████████</span><span class="o">|</span> <span class="mi">194</span><span class="n">kB</span> <span class="mf">47.3</span><span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+     <span class="o">|</span><span class="err">████████████████████████████████</span><span class="o">|</span> <span class="mi">51</span><span class="n">kB</span> <span class="mf">7.9</span><span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+     <span class="o">|</span><span class="err">████████████████████████████████</span><span class="o">|</span> <span class="mi">61</span><span class="n">kB</span> <span class="mf">9.2</span><span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+     <span class="o">|</span><span class="err">████████████████████████████████</span><span class="o">|</span> <span class="mi">61</span><span class="n">kB</span> <span class="mf">9.0</span><span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">fastbook</span>
+<span class="n">fastbook</span><span class="p">.</span><span class="n">setup_book</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">fastai.vision.all</span> <span class="kn">import</span> <span class="o">*</span>
+
+    <span class="n">Mounted</span> <span class="n">at</span> <span class="o">/</span><span class="n">content</span><span class="o">/</span><span class="n">gdrive</span>
+</code></pre></div></div>
+
+<h2 id="multi-label-classification">Multi-label classification</h2>
+
+<p><strong>Multi-label classification</strong> is when you want to predict more than one label per image (or sometimes none at all). In practice, it is probably more common to have some images with zero matches or more than one match, we should probably expect in practice that multi-label classifiers are more widely applicable than single-label classifiers.</p>
+
+<p><strong>PASCAL Visual Object Classes Challenge 2007 Dataset</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="p">.</span><span class="n">PASCAL_2007</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s">'train.csv'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>fname</th>
+      <th>labels</th>
+      <th>is_valid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>000005.jpg</td>
+      <td>chair</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>000007.jpg</td>
+      <td>car</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>000009.jpg</td>
+      <td>horse person</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>000012.jpg</td>
+      <td>car</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <td>000016.jpg</td>
+      <td>bicycle</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Building the DataBlock</strong></p>
+
+<p>The data is not preprocessed, so we will need to shape it correctly to use Fastai.</p>
+
+<p>✅ <strong>Step 1. Get the input path and the target variable</strong></p>
+
+<p>The original dataset is a collection that returns a tuple of your independent and dependent variable for a single item. To use the <code class="language-plaintext highlighter-rouge">DataLoader</code> of Fastai we will need to format and preprocess the data. In a <code class="language-plaintext highlighter-rouge">DataLoader</code>, each mini-batch contains a batch of independent variables and a batch of dependent variables.</p>
+
+<p>We can see the current shape of the data by calling <code class="language-plaintext highlighter-rouge">DataBlock.datasets</code> to create a Datasets object from the source.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dblock</span> <span class="o">=</span> <span class="n">DataBlock</span><span class="p">()</span>
+<span class="n">dsets</span> <span class="o">=</span> <span class="n">dblock</span><span class="p">.</span><span class="n">datasets</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dsets</span><span class="p">.</span><span class="n">train</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(fname       002815.jpg
+ labels          person
+ is_valid          True
+ Name: 1414, dtype: object, 
+
+ fname       002815.jpg
+ labels          person
+ is_valid          True
+ Name: 1414, dtype: object)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dsets</span><span class="p">.</span><span class="n">valid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(fname             000892.jpg
+ labels      person motorbike
+ is_valid               False
+ Name: 443, dtype: object, 
+ 
+ fname             000892.jpg
+ labels      person motorbike
+ is_valid               False
+ Name: 443, dtype: object)
+</code></pre></div></div>
+
+<p>The data is in the wrong format. Instead of a path to the images and the corresponding label, it simply returns a row of the DataFrame, twice. This is because by default, the <strong><code class="language-plaintext highlighter-rouge">DataBlock</code> assumes we have two things: input and target</strong>. Here we don’t have a path or the target specified, so it returns the input twice.</p>
+
+<p>We are going to need to grab the appropriate fields from the DataFrame, which we can do by passing <code class="language-plaintext highlighter-rouge">get_x</code> and <code class="language-plaintext highlighter-rouge">get_y</code> functions.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">get_x</code>: to create a function that points out the path of the files (in the <em>fname</em> column).</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_images_name</span><span class="p">(</span><span class="n">r</span><span class="p">):</span> 
+  <span class="k">return</span> <span class="n">path</span><span class="o">/</span><span class="s">'train'</span><span class="o">/</span><span class="n">r</span><span class="p">[</span><span class="s">'fname'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">get_y</code>: to create a function that takes the targets from the labels column and splits on the space character as there are several labels.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_target_name</span><span class="p">(</span><span class="n">r</span><span class="p">):</span> 
+  <span class="k">return</span> <span class="n">r</span><span class="p">[</span><span class="s">'labels'</span><span class="p">].</span><span class="n">split</span><span class="p">(</span><span class="s">' '</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We will try <code class="language-plaintext highlighter-rouge">DataBlock.datasets</code> again, now with the data formatted using the functions:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># We add the data format to the DataBlock
+</span><span class="n">dblock</span> <span class="o">=</span> <span class="n">DataBlock</span><span class="p">(</span><span class="n">get_x</span> <span class="o">=</span> <span class="n">get_images_name</span><span class="p">,</span>
+                   <span class="n">get_y</span> <span class="o">=</span> <span class="n">get_target_name</span><span class="p">)</span>
+<span class="c1"># We update de dataset feeded to the DataBlock
+</span><span class="n">dsets</span> <span class="o">=</span> <span class="n">dblock</span><span class="p">.</span><span class="n">datasets</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dsets</span><span class="p">.</span><span class="n">train</span><span class="p">[</span><span class="mi">34</span><span class="p">]</span>
+
+    <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s">'/root/.fastai/data/pascal_2007/train/002359.jpg'</span><span class="p">),</span> 
+    <span class="p">[</span><span class="s">'dog'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>Now it returns correctly the datablock format: input (the <em>jpg</em>), and the target (the image label).</p>
+
+<p>✅ <strong>Step 2. Transform the data into tensors</strong></p>
+
+<p>We can use the parameter <code class="language-plaintext highlighter-rouge">ImageBlock</code> to transform these inputs and targets into tensors. It is a good practice to specify the <code class="language-plaintext highlighter-rouge">MultiCategoryBlock</code> method so fastai knows that is a multiclassification type of problem.</p>
+
+<p>In any case, fastai would know that is this type of problem because of the multiple labeling.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dblock</span> <span class="o">=</span> <span class="n">DataBlock</span><span class="p">(</span><span class="n">blocks</span> <span class="o">=</span><span class="p">(</span><span class="n">ImageBlock</span><span class="p">,</span> <span class="n">MultiCategoryBlock</span><span class="p">),</span>
+                   <span class="n">get_x</span> <span class="o">=</span> <span class="n">get_images_name</span><span class="p">,</span>
+                   <span class="n">get_y</span> <span class="o">=</span> <span class="n">get_target_name</span><span class="p">)</span>
+
+<span class="n">dsets</span> <span class="o">=</span> <span class="n">dblock</span><span class="p">.</span><span class="n">datasets</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dsets</span><span class="p">.</span><span class="n">train</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="p">(</span><span class="n">PILImage</span> <span class="n">mode</span><span class="o">=</span><span class="n">RGB</span> <span class="n">size</span><span class="o">=</span><span class="mi">500</span><span class="n">x336</span><span class="p">,</span>
+     <span class="n">TensorMultiCategory</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> 
+                          <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> 
+                          <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<p>By adding <code class="language-plaintext highlighter-rouge">ImageBlock</code>, each element is transformed into a tensor with a 1 representing the label of the image. The categories are <strong>hot-encoded</strong>. A vector of 0s and 1s in each location is represented in the data, to encode a list of integers. There are 20 categories, so the length of this list of 0s and 1 equals 20.</p>
+
+<p>The reason we can’t just use a list of category indices is that each list would be a different length. For example, an image with 2 labels would have 2 elements in a list and a length of 2. An image with 1 label would be a list of length 1. Pytorch/fastai require tensors where targets have to have the same length and that’s why we use hot-encoding.</p>
+
+<p>✅ <strong>Step 3. Create a training and validation data split</strong></p>
+
+<p>For now, the dataset is not divided correctly into train and validation dataset. If we take a look at the dataset, it contains a column called <code class="language-plaintext highlighter-rouge">is_valid</code> that we have been ignoring. This column is a boolean that signals that the data belongs to the train set or the validation set.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>fname</th>
+      <th>labels</th>
+      <th>is_valid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>000005.jpg</td>
+      <td>chair</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>000007.jpg</td>
+      <td>car</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>000009.jpg</td>
+      <td>horse person</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>000012.jpg</td>
+      <td>car</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <td>000016.jpg</td>
+      <td>bicycle</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">DataBlock</code> has been using a random split of the data by default. However, we can create a simple splitter function that takes the values in which <code class="language-plaintext highlighter-rouge">is_valid</code> is <code class="language-plaintext highlighter-rouge">False</code> and stored them in a variable called <code class="language-plaintext highlighter-rouge">train</code>, and if <code class="language-plaintext highlighter-rouge">True</code> stored them in a variable called <code class="language-plaintext highlighter-rouge">valid</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">splitter</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+  <span class="n">train</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="s">'is_valid'</span><span class="p">]].</span><span class="n">tolist</span><span class="p">()</span>
+  <span class="n">valid</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s">'is_valid'</span><span class="p">]].</span><span class="n">tolist</span><span class="p">()</span>
+  <span class="k">return</span> <span class="n">train</span><span class="p">,</span><span class="n">valid</span>
+</code></pre></div></div>
+
+<p>This function separates train and validation datasets to make the split. As long as it returns these 2 elements (train and validation), the <code class="language-plaintext highlighter-rouge">splitter</code> method of <code class="language-plaintext highlighter-rouge">DataBlock</code> can take it.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dblock</span> <span class="o">=</span> <span class="n">DataBlock</span><span class="p">(</span><span class="n">blocks</span><span class="o">=</span><span class="p">(</span><span class="n">ImageBlock</span><span class="p">,</span> <span class="n">MultiCategoryBlock</span><span class="p">),</span>
+                   <span class="n">splitter</span> <span class="o">=</span> <span class="n">splitter</span><span class="p">,</span>
+                   <span class="n">get_x</span> <span class="o">=</span> <span class="n">get_images_name</span><span class="p">,</span>
+                   <span class="n">get_y</span> <span class="o">=</span> <span class="n">get_target_name</span><span class="p">)</span>
+<span class="n">dsets</span> <span class="o">=</span> <span class="n">dblock</span><span class="p">.</span><span class="n">datasets</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dsets</span><span class="p">.</span><span class="n">train</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="p">(</span><span class="n">PILImage</span> <span class="n">mode</span><span class="o">=</span><span class="n">RGB</span> <span class="n">size</span><span class="o">=</span><span class="mi">500</span><span class="n">x333</span><span class="p">,</span>
+     <span class="n">TensorMultiCategory</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> 
+                          <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> 
+                          <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<p>Now, the split of train and validation has the correct labeling.</p>
+
+<p>✅ <strong>Step 4. Input resizing</strong></p>
+
+<p>Lastly, for the <code class="language-plaintext highlighter-rouge">DataBlock</code> to be converted into a <code class="language-plaintext highlighter-rouge">DataLoader</code> it needs that every item is of the same size. To do this, we can use <code class="language-plaintext highlighter-rouge">RandomResizedCrop</code>.</p>
+
+<p>To prove that, we can try the previous <code class="language-plaintext highlighter-rouge">DataBlock</code> without resizing:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dls</span> <span class="o">=</span> <span class="n">dblock</span><span class="p">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">dls</span><span class="p">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="o">---------------------------------------------------------------------------</span>
+
+    <span class="nb">RuntimeError</span>                              <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+
+    <span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">127</span><span class="o">-</span><span class="mi">98</span><span class="n">aca4c77278</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+          <span class="mi">1</span> <span class="n">dls</span> <span class="o">=</span> <span class="n">dblock</span><span class="p">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="o">----&gt;</span> <span class="mi">2</span> <span class="n">dls</span><span class="p">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    
+
+    <span class="o">/</span><span class="p">...</span><span class="o">/</span><span class="n">core</span><span class="p">.</span><span class="n">py</span> <span class="ow">in</span> <span class="n">show_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">max_n</span><span class="p">,</span> <span class="n">ctxs</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+         <span class="mi">98</span>             <span class="n">old_get_idxs</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_idxs</span>
+         <span class="mi">99</span>             <span class="bp">self</span><span class="p">.</span><span class="n">get_idxs</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">Inf</span><span class="p">.</span><span class="n">zeros</span>
+    <span class="o">--&gt;</span> <span class="mi">100</span>         <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">one_batch</span><span class="p">()</span>
+        <span class="mi">101</span>         <span class="k">if</span> <span class="ow">not</span> <span class="n">show</span><span class="p">:</span> <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">_pre_show_batch</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">max_n</span><span class="o">=</span><span class="n">max_n</span><span class="p">)</span>
+        <span class="mi">102</span>         <span class="n">show_batch</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">_pre_show_batch</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">max_n</span><span class="o">=</span><span class="n">max_n</span><span class="p">),</span> <span class="n">ctxs</span><span class="o">=</span><span class="n">ctxs</span><span class="p">,</span> <span class="n">max_n</span><span class="o">=</span><span class="n">max_n</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+
+<span class="p">[...]</span>
+
+    <span class="nb">RuntimeError</span><span class="p">:</span> <span class="n">stack</span> <span class="n">expects</span> <span class="n">each</span> <span class="n">tensor</span> <span class="n">to</span> <span class="n">be</span> <span class="n">equal</span> <span class="n">size</span><span class="p">,</span> 
+    <span class="n">but</span> <span class="n">got</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">441</span><span class="p">]</span> <span class="n">at</span> <span class="n">entry</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">333</span><span class="p">,</span> <span class="mi">500</span><span class="p">]</span> <span class="n">at</span> <span class="n">entry</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>By including resizing, the <code class="language-plaintext highlighter-rouge">DataBlock</code> is correctly loaded and transformed into a <code class="language-plaintext highlighter-rouge">DataLoader</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dblock</span> <span class="o">=</span> <span class="n">DataBlock</span><span class="p">(</span><span class="n">blocks</span><span class="o">=</span><span class="p">(</span><span class="n">ImageBlock</span><span class="p">,</span> <span class="n">MultiCategoryBlock</span><span class="p">),</span>
+                   <span class="n">splitter</span> <span class="o">=</span> <span class="n">splitter</span><span class="p">,</span>
+                   <span class="n">get_x</span> <span class="o">=</span> <span class="n">get_images_name</span><span class="p">,</span>
+                   <span class="n">get_y</span> <span class="o">=</span> <span class="n">get_target_name</span><span class="p">,</span>
+                   <span class="n">item_tfms</span> <span class="o">=</span> <span class="n">RandomResizedCrop</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">min_scale</span><span class="o">=</span><span class="mf">0.35</span><span class="p">))</span>
+<span class="n">dls</span> <span class="o">=</span> <span class="n">dblock</span><span class="p">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">dls</span><span class="p">.</span><span class="n">show_batch</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/images/Fastbook/output_40_0.png" alt="png" /></p>
+
+<p>Fastai includes a method called <code class="language-plaintext highlighter-rouge">summary</code> to check if anything goes wrong when you create your dataset. Besides the previous printing of the batch, we can call it to see errors, if any.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dblock</span><span class="p">.</span><span class="n">summary</span>
+
+    <span class="o">&lt;</span><span class="n">bound</span> <span class="n">method</span> <span class="n">DataBlock</span><span class="p">.</span><span class="n">summary</span> <span class="n">of</span> 
+    <span class="o">&lt;</span><span class="n">fastai</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">block</span><span class="p">.</span><span class="n">DataBlock</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f01e42df2d0</span><span class="o">&gt;&gt;</span>
+</code></pre></div></div>
+
+<p><strong>Binary Cross Entropy and Categorical Cross Entropy</strong></p>
+
+<p>Now that we have our <code class="language-plaintext highlighter-rouge">DataLoaders</code> object we can move to define the loss function that we will use: <strong><em>Binary Cross Entropy</em></strong> (BCE).</p>
+
+<p>BCE is a kind of loss function for <strong>multiple-labels</strong> classification problem. It is slightly different from <strong><em>Categorical Cross Entropy</em></strong>, the default loss function of <strong>single-label</strong> classification problem.</p>
+
+<ul>
+  <li>
+    <p>In <strong>Categorical Cross Entropy</strong>, all the nodes of the final layer of the neural network go through a <code class="language-plaintext highlighter-rouge">softmax</code> transformation function that takes the most positive as the label predicted. The biggest positive value is transformed to 1 and the rest of the label values to 0.</p>
+  </li>
+  <li>
+    <p>In <strong>Binary Cross Entropy</strong>, all the nodes of the final layer pass through a <code class="language-plaintext highlighter-rouge">sigmoid</code> function that transforms all the positive values above a threshold to 1, and the rest to 0. Several values can be above the threshold, as multiple labels could be present in the image.</p>
+  </li>
+</ul>
+
+<p>The <em>“Binary”</em> comes from having a prediction <strong>for every category</strong>. Every label is either 0 or 1, depending on if the label is present in the image.</p>
+
+<p class="mark">Why do we use sigmoid instead of softmax in multi-labeling?</p>
+
+<p>Well, the image <strong>in single-label classification cannot be 2 things at the same time</strong>. An image is either labeled as “dog” or “cat”, but cannot be both. Makes sense to use softmax and use the maximum value for the most probable predicted label - That would be a 1, and the rest 0s.</p>
+
+<p>The problem in multi-labeling is different. In <strong>multicalss classification an image can contain several labels that are independent</strong>. For example a dog, a cat, and a person in the same photo. Therefore, the probability of the label “dog” should not depend on the probability of the label “person”.</p>
+
+<p><strong>Sigmoid transformation in practice</strong></p>
+
+<p>To illustrate how sigmoid and the BCE loss function works we will build a simple model using the data that we formated before.</p>
+
+<p>We will use Restnet18 and pass a small batch to explore the outputs.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Model
+</span><span class="n">learn</span> <span class="o">=</span> <span class="n">cnn_learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">resnet18</span><span class="p">)</span>
+
+<span class="c1"># Making sure that both the model and the data are processed in the GPU
+</span><span class="n">learn</span><span class="p">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">learn</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">cuda</span><span class="p">()</span>
+<span class="n">learn</span><span class="p">.</span><span class="n">dls</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="s">'cuda'</span><span class="p">)</span>
+
+<span class="c1"># Passing one batch
+</span><span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">dls</span><span class="p">.</span><span class="n">train</span><span class="p">.</span><span class="n">one_batch</span><span class="p">()</span>
+
+<span class="c1"># Exploring the outputs of the last layer of the model
+</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">learn</span><span class="p">.</span><span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+    <span class="n">torch</span><span class="p">.</span><span class="n">Size</span><span class="p">([</span><span class="mi">64</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span>
+    <span class="n">tensor</span><span class="p">([</span> <span class="mf">0.0786</span><span class="p">,</span>  <span class="mf">0.6746</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.7760</span><span class="p">,</span>  <span class="mf">2.8992</span><span class="p">,</span>  <span class="mf">0.9360</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1045</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5859</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.3760</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6101</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6136</span><span class="p">,</span>  <span class="mf">3.0267</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5890</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2249</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5697</span><span class="p">,</span> 
+            <span class="o">-</span><span class="mf">1.4767</span><span class="p">,</span>  <span class="mf">0.2276</span><span class="p">,</span>  <span class="mf">0.2324</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0516</span><span class="p">,</span>  <span class="mf">0.7298</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1993</span><span class="p">],</span>
+            <span class="n">device</span><span class="o">=</span><span class="s">'cuda:0'</span><span class="p">,</span> <span class="n">grad_fn</span><span class="o">=&lt;</span><span class="n">SelectBackward</span><span class="o">&gt;</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p class="mark"> What are these tensor values?</p>
+
+<p>These are values corresponding to the nodes of the last layer. Note that these values haven’t gone yet through the transformation function (sigmoid/softmax/others) that gets you the final label prediction. <strong>After</strong> the transformation function, these outputs will be either 0s (not that label) or 1s (label identified).</p>
+
+<p class="mark"> What represents the "64" and "20" in torch.Size([64, 20])? </p>
+
+<p>64 Refers to the number of images in the batch. Every batch is made of 64 images.  Trying to select the 65th image (<code class="language-plaintext highlighter-rouge">outputs[64]</code>) will show an out-of-range error because a batch contains only 64 images.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">outputs</span><span class="p">[</span><span class="mi">64</span><span class="p">]</span>
+
+
+    <span class="o">---------------------------------------------------------------------------</span>
+
+    <span class="nb">IndexError</span>                                <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+
+    <span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">134</span><span class="o">-</span><span class="mi">2751</span><span class="n">f6a48786</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+    <span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">64</span><span class="p">]</span>
+    
+
+    <span class="nb">IndexError</span><span class="p">:</span> <span class="n">index</span> <span class="mi">64</span> <span class="ow">is</span> <span class="n">out</span> <span class="n">of</span> <span class="n">bounds</span> <span class="k">for</span> <span class="n">dimension</span> <span class="mi">0</span> <span class="k">with</span> <span class="n">size</span> <span class="mi">64</span>
+</code></pre></div></div>
+
+<p>The “20” are the number of categories or labels. It represents the last layer in the neural network. It has 20 nodes corresponding to the 20 different categories/labels.</p>
+
+<p>Now that we know the output of the model, we can apply to them a sigmoid transformation and the Binary Cross Entropy loss. We will take the first image of the batch <code class="language-plaintext highlighter-rouge">output[0]</code> and can call the <code class="language-plaintext highlighter-rouge">sigmoid()</code> method on it to see the difference in the results:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">tensor</span><span class="p">([</span> <span class="mf">0.0786</span><span class="p">,</span>  <span class="mf">0.6746</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.7760</span><span class="p">,</span>  <span class="mf">2.8992</span><span class="p">,</span>  <span class="mf">0.9360</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.1045</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5859</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3760</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6101</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6136</span><span class="p">,</span>  
+             <span class="mf">3.0267</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5890</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2249</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5697</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.4767</span><span class="p">,</span>  
+             <span class="mf">0.2276</span><span class="p">,</span>  <span class="mf">0.2324</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0516</span><span class="p">,</span>  <span class="mf">0.7298</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1993</span><span class="p">],</span>
+           <span class="n">device</span><span class="o">=</span><span class="s">'cuda:0'</span><span class="p">,</span> <span class="n">grad_fn</span><span class="o">=&lt;</span><span class="n">SelectBackward</span><span class="o">&gt;</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">.</span><span class="n">sigmoid</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">tensor</span><span class="p">([</span><span class="mf">0.5196</span><span class="p">,</span> <span class="mf">0.6625</span><span class="p">,</span> <span class="mf">0.1448</span><span class="p">,</span> <span class="mf">0.9478</span><span class="p">,</span> <span class="mf">0.7183</span><span class="p">,</span> 
+            <span class="mf">0.4739</span><span class="p">,</span> <span class="mf">0.0700</span><span class="p">,</span> <span class="mf">0.4071</span><span class="p">,</span> <span class="mf">0.3520</span><span class="p">,</span> <span class="mf">0.3512</span><span class="p">,</span> 
+            <span class="mf">0.9538</span><span class="p">,</span> <span class="mf">0.3569</span><span class="p">,</span> <span class="mf">0.4440</span><span class="p">,</span> <span class="mf">0.3613</span><span class="p">,</span> <span class="mf">0.1859</span><span class="p">,</span> 
+            <span class="mf">0.5566</span><span class="p">,</span> <span class="mf">0.5578</span><span class="p">,</span> <span class="mf">0.1139</span><span class="p">,</span> <span class="mf">0.6748</span><span class="p">,</span> <span class="mf">0.2316</span><span class="p">],</span> 
+           <span class="n">device</span><span class="o">=</span><span class="s">'cuda:0'</span><span class="p">,</span> <span class="n">grad_fn</span><span class="o">=&lt;</span><span class="n">SelectBackward</span><span class="o">&gt;</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Notice that the sigmoid function transforms all the predictions of the model (outputs) into a <strong>range 0 to 1</strong>. This is very useful for Binary Cross Entropy loss as it requires every label to be either a 1 or a 0.</p>
+
+<p>Remember that each of the 20 values of the <code class="language-plaintext highlighter-rouge">tensor</code> represents a label, and the number resulting from this transformation represents the probability of this label.</p>
+
+<p class="mark"> How do we select which predictions are 1s and which ones 0s? </p>
+
+<p>The easiest solution is <strong>setting a threshold</strong>, a value, positive enough that we consider that the label is predicted. All the values more than this threshold are transformed to 1, or labels predicted.</p>
+
+<p>For example, let’s take the last outputs in <code class="language-plaintext highlighter-rouge">outputs.sigmoid()[0]</code> above and set a threshold of 0.7. The label associated with the node with the value <code class="language-plaintext highlighter-rouge">0.9478</code> and <code class="language-plaintext highlighter-rouge">0.7183</code> are the predicted labels, for the 18 other labels are not activated as they are below the threshold.</p>
+
+<p>Here we have shown the transformation for the first image - index 0 (<code class="language-plaintext highlighter-rouge">[0]</code>). In practice, we apply sigmoid for every batch of the model and select the values for Binary Cross Entropy into the same step as we see next.</p>
+
+<p><strong>Sigmoid Threshold Optimiazion</strong></p>
+
+<p>The default threshold used for the Sigmoid transformation is 0.5. However, it can be other values as we saw in the last section setting 0.7. There is <strong>no way to see if the default value is a good threshold before you try with several</strong> thresholds.</p>
+
+<p>To test this, we will build the model with different thresholds and give them some epochs to see if the accuracy changes.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Deeper Model with more batches
+</span><span class="n">learn</span> <span class="o">=</span> <span class="n">cnn_learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">resnet50</span><span class="p">,</span> 
+                    <span class="n">metrics</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">accuracy_multi</span><span class="p">,</span> <span class="n">thresh</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">))</span>
+
+<span class="c1"># Optimize the learning rate
+</span><span class="n">lr_suggested</span> <span class="o">=</span> <span class="n">learn</span><span class="p">.</span><span class="n">lr_find</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Freeze the first 5 epochs and run 5 epochs
+</span><span class="n">learn</span><span class="p">.</span><span class="n">fine_tune</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">base_lr</span> <span class="o">=</span> <span class="n">lr_suggested</span><span class="p">,</span> <span class="n">freeze_epochs</span><span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>accuracy_multi</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.988882</td>
+      <td>0.733648</td>
+      <td>0.200498</td>
+      <td>00:40</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0.897558</td>
+      <td>0.651835</td>
+      <td>0.226036</td>
+      <td>00:40</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>0.797924</td>
+      <td>0.555892</td>
+      <td>0.264064</td>
+      <td>00:40</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>0.654679</td>
+      <td>0.331369</td>
+      <td>0.504701</td>
+      <td>00:40</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0.454360</td>
+      <td>0.168649</td>
+      <td>0.888008</td>
+      <td>00:41</td>
+    </tr>
+  </tbody>
+</table>
+
+<table border="0" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>accuracy_multi</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.192024</td>
+      <td>0.137152</td>
+      <td>0.931693</td>
+      <td>00:45</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0.164923</td>
+      <td>0.118155</td>
+      <td>0.942410</td>
+      <td>00:46</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>0.139310</td>
+      <td>0.108408</td>
+      <td>0.952570</td>
+      <td>00:46</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>0.118630</td>
+      <td>0.106424</td>
+      <td>0.950259</td>
+      <td>00:45</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0.104928</td>
+      <td>0.105443</td>
+      <td>0.952151</td>
+      <td>00:46</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Please note that instead of changing the entire model you can use <code class="language-plaintext highlighter-rouge">metrics</code> and <code class="language-plaintext highlighter-rouge">partial</code>. The sigmoid threshold only applies to the last layer of the neural network.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">learn</span><span class="p">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">accuracy_multi</span><span class="p">,</span> <span class="n">thresh</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">learn</span><span class="p">.</span><span class="n">validate</span><span class="p">()</span>
+
+    <span class="p">(</span><span class="c1">#2) [0.10544303804636002,0.9638046622276306]
+</span></code></pre></div></div>
+
+<p>Using <code class="language-plaintext highlighter-rouge">validate()</code> returns the validation loss (<code class="language-plaintext highlighter-rouge">valid_loss</code>) and the metrics loss (<code class="language-plaintext highlighter-rouge">accuracy_multi</code> in this case). A threshold of 0.5 produces a slightly better accuracy loss (0.964 vs previous 0.952)</p>
+
+<p>As you can imagine, there must be a way to loop over several thresholds instead of trying all possible thresholds by hand.</p>
+
+<p>To loop over different values we can make a batch of predictions using <code class="language-plaintext highlighter-rouge">get_preds</code> and use this batch of predictions to loop a range of possible thresholds and compare accuracy.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Batch of predictions
+</span><span class="n">train</span><span class="p">,</span> <span class="n">targs</span> <span class="o">=</span> <span class="n">learn</span><span class="p">.</span><span class="n">get_preds</span><span class="p">()</span>
+
+<span class="c1"># Possible sigmoid thresholds, from 0.05 to 0.95
+</span><span class="n">thr</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.95</span><span class="p">,</span><span class="mi">29</span><span class="p">)</span>
+
+<span class="c1"># Accuracy loop
+</span><span class="n">accs</span> <span class="o">=</span> <span class="p">[</span><span class="n">accuracy_multi</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">targs</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">sigmoid</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">thr</span><span class="p">]</span>
+
+<span class="c1"># plot them
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="n">accs</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/images/Fastbook/output_69_1.png" alt="png" /></p>
+
+<p>The x-axis denotes the threshold values, and the y-axis the accuracy values. We can see that a sigmoid threshold between 0.45 and 0.7 gives us around 0.96 accuracies in the validation set.</p>
+
+<p><code class="language-plaintext highlighter-rouge">get_preds()</code> apply by default sigmoid, so you will have to set <code class="language-plaintext highlighter-rouge">accuracy_multi(sigmoid=False)</code> in the model to not pass the transformation twice.</p>
+
+<h2 id="regression">Regression</h2>
+
+<p><strong>Regression</strong> is when your labels are one or several numbers - a quantity instead of a category.</p>
+
+<p>Image regression refers to learning from a dataset in which the independent variable is an image or element, and <strong>the dependent variable is one or more floats</strong>.</p>
+
+<p>Perhaps we have an independent variable that’s an image, and a dependent that’s text (e.g. generating a caption from an image); or perhaps we have an independent variable
+that’s text and a dependent that’s an image (e.g. generating an image from a caption).</p>
+
+<p>To illustrate this kind of model we’re going to do a <strong>key point model</strong>. A key point refers to a specific location represented in an image. So the input is face images, and the output should be a float with the coordinates of the center of the face.</p>
+
+<p><strong>Head Pose Dataset</strong></p>
+
+<p>The data needs a little preprocessing and formating. The idea is the same as before, creating a function that points to the path of the data and create targets.</p>
+
+<p>The path of the images is inside objects formatted as <code class="language-plaintext highlighter-rouge">obj</code>. The targets will be created with a function that calculates the center of the image. The model will try to predict the coordinates of the center of the image.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Load data
+</span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="p">.</span><span class="n">BIWI_HEAD_POSE</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+    <style>
+        /* Turns off some styling */
+        progress {
+            /* gets rid of default border in Firefox and Opera. */
+            border: none;
+            /* Needs to be in here for Safari polyfill so background images work as expected. */
+            background-size: auto;
+        }
+        .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+            background: #F44336;
+        }
+    </style>
+  <progress value="452321280" class="" max="452316199" style="width:300px; height:20px; vertical-align: middle;"></progress>
+  100.00% [452321280/452316199 00:09&lt;00:00]
+</div>
+
+<p>The data is inside this objects <code class="language-plaintext highlighter-rouge">obj</code> and there are 24 objects.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>path.ls()
+
+    (#50) [Path('/root/.fastai/data/biwi_head_pose/14.obj'),
+           Path('/root/.fastai/data/biwi_head_pose/18'),
+           Path('/root/.fastai/data/biwi_head_pose/06.obj'),
+           Path('/root/.fastai/data/biwi_head_pose/io_sample.cpp'),
+           ...]
+</code></pre></div></div>
+<p>Every object has 1000 images and labeled poses.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(path/'01').ls()
+
+    (#1000) [Path('/root/.fastai/data/biwi_head_pose/01/frame_00307_pose.txt'),
+             Path('/root/.fastai/data/biwi_head_pose/01/frame_00159_pose.txt'),
+             Path('/root/.fastai/data/biwi_head_pose/01/frame_00363_pose.txt'),
+             Path('/root/.fastai/data/biwi_head_pose/01/frame_00434_pose.txt'),
+             ...]
+</code></pre></div></div>
+
+<p>We will create the function <code class="language-plaintext highlighter-rouge">img2pose</code> to extract the pose path.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">img_files</span> <span class="o">=</span> <span class="n">get_image_files</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="c1"># write a function that converts an image filename
+</span><span class="k">def</span> <span class="nf">img2pose</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)[:</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span><span class="si">}</span><span class="s">pose.txt'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now that we have the pose and the image path, we should have the images in <em>jpg</em> and the labels in <em>txt</em> format under the same identifier.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">img_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">img2pose</span><span class="p">(</span><span class="n">img_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="o">/</span><span class="n">root</span><span class="o">/</span><span class="p">.</span><span class="n">fastai</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">biwi_head_pose</span><span class="o">/</span><span class="mi">18</span><span class="o">/</span><span class="n">frame_00518_rgb</span><span class="p">.</span><span class="n">jpg</span>
+    <span class="o">/</span><span class="n">root</span><span class="o">/</span><span class="p">.</span><span class="n">fastai</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">biwi_head_pose</span><span class="o">/</span><span class="mi">18</span><span class="o">/</span><span class="n">frame_00518_pose</span><span class="p">.</span><span class="n">txt</span>
+</code></pre></div></div>
+
+<p>Let’s take a look at an image.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">im</span> <span class="o">=</span> <span class="n">PILImage</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">img_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">im</span><span class="p">.</span><span class="n">to_thumb</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/images/Fastbook/output_83_0.png" alt="png" /></p>
+
+<p>We extract the center of the image creating a function that returns the coordinates as a tensor of two items. However, the details of the function are not important. Every dataset will require a different cleaning a formatting process.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cal</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s">'01'</span><span class="o">/</span><span class="s">'rgb.cal'</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_ctr</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+  <span class="n">ctr</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">img2pose</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+  <span class="n">c1</span> <span class="o">=</span> <span class="n">ctr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">cal</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">ctr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">cal</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">c2</span> <span class="o">=</span> <span class="n">ctr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">cal</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">ctr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">cal</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">tensor</span><span class="p">([</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># The center of the image is the label that we are trying to predict
+</span><span class="n">get_ctr</span><span class="p">(</span><span class="n">img_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">tensor</span><span class="p">([</span><span class="mf">344.3451</span><span class="p">,</span> <span class="mf">330.0573</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p><strong>Building the DataBlock</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">biwi_data</span> <span class="o">=</span> <span class="n">DataBlock</span><span class="p">(</span>
+    <span class="n">blocks</span><span class="o">=</span><span class="p">(</span><span class="n">ImageBlock</span><span class="p">,</span> <span class="n">PointBlock</span><span class="p">),</span>
+    <span class="n">get_items</span><span class="o">=</span><span class="n">get_image_files</span><span class="p">,</span>
+    <span class="n">get_y</span><span class="o">=</span><span class="n">get_ctr</span><span class="p">,</span>
+    <span class="c1"># Splitter function that returns True for just one person, 
+</span>    <span class="c1"># as we dont want to train with the same person all over and over.
+</span>    <span class="n">splitter</span><span class="o">=</span><span class="n">FuncSplitter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">name</span><span class="o">==</span><span class="s">'13'</span><span class="p">),</span>
+    <span class="c1"># Data augmentation and normalization
+</span>    <span class="n">batch_tfms</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">aug_transforms</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">240</span><span class="p">,</span><span class="mi">320</span><span class="p">)),</span>
+                <span class="n">Normalize</span><span class="p">.</span><span class="n">from_stats</span><span class="p">(</span><span class="o">*</span><span class="n">imagenet_stats</span><span class="p">)]</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dls</span> <span class="o">=</span> <span class="n">biwi_data</span><span class="p">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">dls</span><span class="p">.</span><span class="n">show_batch</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/images/Fastbook/output_89_1.png" alt="png" /></p>
+
+<p>The input is the image, and the target is the red dots. The batch of data looks correct.</p>
+
+<p><strong>Modeling</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">learn</span> <span class="o">=</span> <span class="n">cnn_learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">resnet18</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>When coordinates are used as the dependent variable, most of the time we’re likely to be trying to predict something as close as possible, so we would like to use the MSE loss function. We can check the default loss function using <code class="language-plaintext highlighter-rouge">loss_func</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">learn</span><span class="p">.</span><span class="n">loss_func</span>
+
+    <span class="n">FlattenedLoss</span> <span class="n">of</span> <span class="n">MSELoss</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Fastai applied the loss function correctly. Let’s find a good learning rate and fit the model. You can use <code class="language-plaintext highlighter-rouge">one_cyle_fit</code> instead of <code class="language-plaintext highlighter-rouge">fine_tune</code> to save time using large learning rates (more <a href="https://fastai1.fast.ai/callbacks.one_cycle.html">here</a> and <a href="https://arxiv.org/abs/1708.07120">here</a>).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lr_finder</span> <span class="o">=</span> <span class="n">learn</span><span class="p">.</span><span class="n">lr_find</span><span class="p">()</span>
+<span class="n">learn</span><span class="p">.</span><span class="n">fine_tune</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">lr_finder</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div></div>
+
+<table border="0" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.111715</td>
+      <td>0.004949</td>
+      <td>03:32</td>
+    </tr>
+  </tbody>
+</table>
+
+<table border="0" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.009237</td>
+      <td>0.001873</td>
+      <td>04:41</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0.003953</td>
+      <td>0.000574</td>
+      <td>04:41</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>0.002914</td>
+      <td>0.000619</td>
+      <td>04:41</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>0.002445</td>
+      <td>0.000372</td>
+      <td>04:41</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0.001847</td>
+      <td>0.000476</td>
+      <td>04:41</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>0.001449</td>
+      <td>0.000187</td>
+      <td>04:41</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>0.001440</td>
+      <td>0.000143</td>
+      <td>04:41</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The predicted center points are quite close to the real center of the faces!</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">learn</span><span class="p">.</span><span class="n">show_results</span><span class="p">(</span><span class="n">ds_idx</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_n</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/images/Fastbook/output_100_1.png" alt="png" /></p>
+
+<p>In problems that are at first glance completely different (single-label classification,
+multi-label classification, and regression), we end up using the same model with just
+different numbers of outputs. The loss function is the one thing that changes, which
+is why it’s important to double-check that you are using the right loss function for
+your problem using <code class="language-plaintext highlighter-rouge">loss_func</code>.</p>
+:ET
