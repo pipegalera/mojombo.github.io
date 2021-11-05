@@ -1,3 +1,3 @@
-# Mod of the Theme of Tom Preston-Werner website: https://tom.preston-werner.com/
+### Tom Preston-Werner website mod
 
 ![](Mojombo_mod.png)
