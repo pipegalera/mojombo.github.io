@@ -13,7 +13,7 @@ In this chapter, we are going to look at two other types of computer vision prob
 - Regression. 
 
 
-I will use Google Colab to run the code, as in [Chapter 5 notes](http://localhost:1313/today-i-learned-posts/fastbook-chapter5-image_classification/).
+I will use Google Colab to run the code, as in Chapter 5 notes.
 
 ```python
 !pip install -Uqq fastbook

@@ -1,4 +1,4 @@
-I"R<h1 id="measuring-efficient-offensive-production-in-the-nba">Measuring Efficient Offensive Production in the NBA</h1>
+I"Q<h1 id="measuring-efficient-offensive-production-in-the-nba">Measuring Efficient Offensive Production in the NBA</h1>
 
 <p>More important than how a player chooses to score is whether or not his scoring is efficient. No one ruins a pick-up game like the gunner, throwing bricks every two possessions. Scoring more points does not necessarily help a team. Scoring 30 points in 20 attempts is great for the team, but doing it in 70 attempts is terrible. Players cannot waste possessions, the scoring must be efficient.</p>
 
@@ -413,8 +413,6 @@ This [Blazers] Melo is about efficiency and sacrifice: Anthony would primarily l
 <p>The way the value should be interpreted is as efficient points made. In the end, EOP is points plus assists “translated to points” multiplied by the players’ efficiency coefficient OE. Not surprisingly <strong>Nikola Jokić ranks first</strong>, as he is a prolific passer, a very efficient scorer, and a volume shooter.</p>
 
 <p>There are significant differences in rankings according to EOP and OE. EOP rewards more fairly high volume three-pointers and volume scorers like Bradley Beal and gives more credit to players that drive team offense like Stephen Curry and Luka Dončić. It details better than OE the total offensive contribution of a player as it accounts for the number of points produced and includes the value of assists.</p>
-
-<p>All the <strong>code</strong> to produce the metrics, tables and data can be found <a href="https://github.com/pipegalera/pipegalera.github.io/tree/main/content/blog/offensive-efficiency/code">here in this Github repository.</a></p>
 
 <div class="footnotes" role="doc-endnotes">
   <ol>

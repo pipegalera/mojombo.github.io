@@ -1,6 +1,6 @@
 ---
 layout: course
-title: HSE University - Week 2 - Exploratory Data Analysis
+title: How To Win a Data Science Competition - Week 2 - Exploratory Data Analysis
 ---
 
 {{ page.tittle }}
@@ -156,7 +156,7 @@ All the validation strategies split the dataset into chunks. The main difference
 - All the iterations and chunks possible without repetition: Jackknife.
 
 
-# <span style="color:#FF9F1D">Stratification
+# Stratification
 
 
 **In small samples, the distribution of the different classes or labels** is an important aspect to take into account. Setting a stratify parameter will preserve the proportion of target as in the original dataset, in the train and test datasets as well. In other words, make sure that the distribution of classes is the same in the train set and the validation set
@@ -196,7 +196,7 @@ When the observations are independent is advised to use a random split.
 
 **The general rule of thumb is to set up the validation split to mimic the test split of the competition**. So if the private data (the data that the model will be tested by the organizers) is a random sample of the dataset, split your training/test data in random splits. However, if the private data is future observation in time, split the data in a sequential way/timewise.
 
-# <span style="color:#FF9F1D">Usual splitting problems in Kaggle competitions
+# Usual splitting problems in Kaggle competitions
 
 ### Problem 1: Getting optimal parameters for different K-fold splits.
 

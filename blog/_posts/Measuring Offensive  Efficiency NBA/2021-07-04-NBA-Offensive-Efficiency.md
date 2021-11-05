@@ -210,6 +210,4 @@ The way the value should be interpreted is as efficient points made. In the end,
 There are significant differences in rankings according to EOP and OE. EOP rewards more fairly high volume three-pointers and volume scorers like Bradley Beal and gives more credit to players that drive team offense like Stephen Curry and Luka Dončić. It details better than OE the total offensive contribution of a player as it accounts for the number of points produced and includes the value of assists. 
 
 
-All the **code** to produce the metrics, tables and data can be found [here in this Github repository.](https://github.com/pipegalera/pipegalera.github.io/tree/main/content/blog/offensive-efficiency/code)
-
 [^1]: Shea, Stephen M., and Christopher E. Baker. Basketball analytics: Objective and efficient strategies for understanding how teams win. Advanced Metrics, 2013.

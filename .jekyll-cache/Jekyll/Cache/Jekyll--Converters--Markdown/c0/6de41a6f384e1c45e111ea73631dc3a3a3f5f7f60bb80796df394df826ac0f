@@ -1,4 +1,4 @@
-I"'D
+I"·C
 <p>================</p>
 
 <h2 id="approaching-a-competition">Approaching a competition</h2>
@@ -154,7 +154,7 @@
   <li>All the iterations and chunks possible without repetition: Jackknife.</li>
 </ul>
 
-<h1 id="stratification"><span style="color:#FF9F1D">Stratification</span></h1>
+<h1 id="stratification">Stratification</h1>
 
 <p><strong>In small samples, the distribution of the different classes or labels</strong> is an important aspect to take into account. Setting a stratify parameter will preserve the proportion of target as in the original dataset, in the train and test datasets as well. In other words, make sure that the distribution of classes is the same in the train set and the validation set</p>
 
@@ -197,7 +197,7 @@
 
 <p><strong>The general rule of thumb is to set up the validation split to mimic the test split of the competition</strong>. So if the private data (the data that the model will be tested by the organizers) is a random sample of the dataset, split your training/test data in random splits. However, if the private data is future observation in time, split the data in a sequential way/timewise.</p>
 
-<h1 id="usual-splitting-problems-in-kaggle-competitions"><span style="color:#FF9F1D">Usual splitting problems in Kaggle competitions</span></h1>
+<h1 id="usual-splitting-problems-in-kaggle-competitions">Usual splitting problems in Kaggle competitions</h1>
 
 <h3 id="problem-1-getting-optimal-parameters-for-different-k-fold-splits">Problem 1: Getting optimal parameters for different K-fold splits.</h3>
 

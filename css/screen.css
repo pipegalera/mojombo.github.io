@@ -42,11 +42,12 @@ p {
 }
 
 a {
-  color: #00a;
+  color: black;
 }
 
-a:hover {
-  color: black;
+a:link {
+  text-decoration-style: dotted;
+  text-decoration-color: red;
 }
 
 a:visited {

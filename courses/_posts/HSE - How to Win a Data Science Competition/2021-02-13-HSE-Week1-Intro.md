@@ -1,6 +1,6 @@
 ---
 layout: course
-title: HSE University - Week 1 - Introduction
+title: How To Win a Data Science Competition - Week 1 - Introduction
 ---
 
 {{ page.tittle }}
