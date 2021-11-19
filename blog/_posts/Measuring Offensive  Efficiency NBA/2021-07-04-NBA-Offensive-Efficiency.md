@@ -77,7 +77,7 @@ As you can imagine, this metric rewards a player that creates points. The follow
 | 19 | Donovan Mitchell      | 0.51 |  26.4 |
 
 
-You might notice that players that score near the rim have a better OE, which makes sense as near the rim is the most efficient spot in the game[^2].
+You might notice that players that score near the rim have a better OE, which makes sense as near the rim is the most efficient spot in the game[^1].
 
 **The average Offensive Efficiency for this season was 0.57**. The 40% of the top scorers are more efficient than the league average, while others the resting 60% are not. The next section explains more deeply how some of these players could be more efficient but are forced to make tough shots.
 
@@ -151,7 +151,7 @@ If you are a Nuggets or Celtics fan, you must have seen these situations plenty 
 
 In theory, we could calculate each assist worth according to the extra expected points added and where the scorer was, for each assist. For example, assisted corner threes would worth more than simple assists moving the ball at the perimeter. But this approach would require spatial-temporal data and breaking a rule for this metric: keep it simple.
 
-To keep the assist value wrapped in a simple coefficient, I will take **the average expected points added from an assist** stated in [A. Sicilia et al. (2019)](https://arxiv.org/pdf/1902.08081.pdf). On average, **an assisted shot added 0.16 expected points more compared to an unassisted shot**. This result is more accurate and significantly lower than the previous coefficient of 0.76 from the first attempts to calculate the assist value[^1].
+To keep the assist value wrapped in a simple coefficient, I will take **the average expected points added from an assist** stated in [A. Sicilia et al. (2019)](https://arxiv.org/pdf/1902.08081.pdf). On average, **an assisted shot added 0.16 expected points more compared to an unassisted shot**. This result is more accurate and significantly lower than the previous coefficient of 0.76 from the first attempts to calculate the assist value[2].
 
 While this "shortcut" is not perfect, it allows data and NBA enthusiasts like me to being able to [download free aggregate data](https://share.streamlit.io/pipegalera/basketballreference-webscraper/main) and building this metric.
 
@@ -209,5 +209,5 @@ The way the value should be interpreted is as efficient points made. In the end,
 
 There are significant differences in rankings according to EOP and OE. EOP rewards more fairly high volume three-pointers and volume scorers like Bradley Beal and gives more credit to players that drive team offense like Stephen Curry and Luka Dončić. It details better than OE the total offensive contribution of a player as it accounts for the number of points produced and includes the value of assists. 
 
-
-[^1]: Shea, Stephen M., and Christopher E. Baker. Basketball analytics: Objective and efficient strategies for understanding how teams win. Advanced Metrics, 2013.
+[^1]: Shea, Stephen M.: [ShotTracker.com - Analytics & Shot Selection](https://shottracker.com/articles/analytics-shot-selection)
+[^2]: Shea, Stephen M., and Christopher E. Baker. Basketball analytics: Objective and efficient strategies for understanding how teams win. Advanced Metrics, 2013.
