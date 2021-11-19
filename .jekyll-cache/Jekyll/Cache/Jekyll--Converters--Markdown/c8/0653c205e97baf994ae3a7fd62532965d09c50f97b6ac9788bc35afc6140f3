@@ -1,0 +1,34 @@
+I"Ì<p>How to set up fastai in Windows 10, fast.</p>
+
+<ol>
+  <li>
+    <p><a href="https://developer.nvidia.com/cuda-11.3.0-download-archive?target_os=Windows&amp;target_arch=x86_64&amp;target_version=10">Install CUDA Toolkit 11.3</a></p>
+  </li>
+  <li>
+    <p>Create a new clean Python environment using <a href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a> :</p>
+
+    <p><code class="language-plaintext highlighter-rouge">conda create -n fastai python=3.8</code></p>
+
+    <p><code class="language-plaintext highlighter-rouge">conda activate fastai</code></p>
+  </li>
+  <li>
+    <p>Install Pytorch:</p>
+
+    <p><code class="language-plaintext highlighter-rouge">conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch</code></p>
+
+    <p>Try:</p>
+
+    <p><code class="language-plaintext highlighter-rouge">import torch</code>
+ <code class="language-plaintext highlighter-rouge">device = torch.device("cuda:0")</code></p>
+  </li>
+  <li>
+    <p>Install Fastai:</p>
+
+    <p><code class="language-plaintext highlighter-rouge">conda install -c fastchan fastai</code></p>
+
+    <p>Try:</p>
+
+    <p><code class="language-plaintext highlighter-rouge">from fastai.vision.all import *</code></p>
+  </li>
+</ol>
+:ET
