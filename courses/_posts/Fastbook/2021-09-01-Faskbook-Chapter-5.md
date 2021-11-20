@@ -588,20 +588,21 @@ Instead of printing the epoch results, from here on I'll show the results of the
 
 ## Discriminative learning rates
 
-Even after we unfreeze, we still care a lot about the quality of those pre-trained weights. We would not expect that the best learning rate for those pre-trained parameters would be as high as for the randomly added parameters, even after we have tuned those randomly added parameters for a few epochs
-
 Like many good ideas in deep learning, the idea of ***Discriminative learning rates*** is extremely simple: use a lower learning rate for the early layers of the neural network,
 and a higher learning rate for the later layers
 
-The first layer learns very simple foundations, like image edges and gradient detectors; these are likely to be just as useful for nearly any task. The later layers learn much more complex concepts, like the concept of “eye” and “sunset,” which might not be useful in your task at all (maybe you’re classifying car models, for instance). So it makes sense to let the later layers fine-tune more quickly than earlier layers.
+The first layer learns very simple foundations, like image edges and gradient detectors; these are likely to be just as useful for nearly any task. The later layers learn much more complex concepts, like the concept of “eye” and “sunset,” which might not be useful in your task at all - maybe you’re classifying car models, for instance. So it makes sense to let the later layers fine-tune more quickly than earlier layers.
 
 By default, fastai `cnn_learner` uses discriminative learning rates.
 
-Let’s use this approach to replicate the previous training, but this time:
+Let’s use this approach to replicate the previous training, but this time using Discriminative learning rates using a slice range in the learning rate parmeter - `lr_max=slice(4e-6,4e-4)`. 
 
-The first value passed will be the learning rate in the earliest layer of the neural network, and the second value will be the learning rate in the final layer. The layers in between will have learning rates that are multiplicatively equidistant throughout that range.
+- The first value (`4e-6`) is the learning rate in the earliest layer of the neural network.
 
-Let’s use this approach to replicate the previous training, but this time we’ll set only the lowest layer of our network to a learning rate of 4e-6; the other layers will scale up to 4e-4.
+- The second value (`4e-4`) is the learning rate of the final layer. 
+
+- The layers in between will have learning rates scale up from the first until they reach the second value. The learning rate in between is equidistant throughout that range.
+
 
 
 ```python
