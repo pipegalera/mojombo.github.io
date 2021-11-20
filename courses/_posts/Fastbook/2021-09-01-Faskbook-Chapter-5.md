@@ -595,13 +595,13 @@ The first layer learns very simple foundations, like image edges and gradient de
 
 By default, fastai `cnn_learner` uses discriminative learning rates.
 
-Let’s use this approach to replicate the previous training, but this time using Discriminative learning rates using a slice range in the learning rate parmeter - `lr_max=slice(4e-6,4e-4)`. 
+Let’s use this approach to replicate the previous training, but this time using Discriminative learning rates using a slice range in the learning rate parmeter: `lr_max=slice(4e-6,4e-4)`. 
 
 - The first value (`4e-6`) is the learning rate in the earliest layer of the neural network.
 
 - The second value (`4e-4`) is the learning rate of the final layer. 
 
-- The layers in between will have learning rates scale up from the first until they reach the second value. The learning rate in between is equidistant throughout that range.
+- The layers in between will have learning rates that scale up equidistantly throughout that range - from the first until they reach the second value.
 
 
 
