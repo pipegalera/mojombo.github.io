@@ -46,8 +46,8 @@ a {
 }
 
 a:link {
-  text-decoration-style: dotted;
-  text-decoration-color: red;
+  text-decoration-style: none;
+  text-decoration-color: black;
 }
 
 a:visited {
