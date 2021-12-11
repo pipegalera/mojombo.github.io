@@ -34,11 +34,11 @@ title: Google - Share Data Through the Art of Visualization
 
 Which kinds of data visualizations would be most useful?
 
-![](/images/Fastbook/Google Data Analitics - Visualization/C6_viz_decision_tree.png " ")
+![](/images/Google Data Analitics - Visualization/C6_viz_decision_tree.png " ")
 
 ## Designing a chart in 60 minutes 
 
-![](/images/Fastbook/Google Data Analitics - Visualization/C6_viz_in60.png " ")
+![](/images/Google Data Analitics - Visualization/C6_viz_in60.png " ")
 
 **Prep (5 min)**: Create the mental and physical space necessary for an environment of comprehensive thinking. This means allow yourself room to brainstorm how you want your data to appear while considering the amount and type of data that you have.
 
@@ -106,7 +106,7 @@ A compelling story needs the following attributes:
 
 - Use **arrows and call-outs** to direct the attention to the points that you want them to look at in the graphs.
 
-![](/images/Fastbook/Google Data Analitics - Visualization/C6_mccandless_3.png " ")
+![](/images/Google Data Analitics - Visualization/C6_mccandless_3.png " ")
 
 
 - **Include transition slides or keynotes**. Those are slides that indicates that the previous slide presentation is over and indicating what to expect in the next slide. *"Moving on, the next tackles the effect of..."*
@@ -132,14 +132,14 @@ Use this method to introduce data visualizations during the presentations.
 
 One good way to make sure to follow these 2 steps is introducing the slide with the graphic with only the graphic name and the visualization. **No text**. Then, you describe what they are seeing and what the data comes from (answer obvious questions beforehand)
 
-![](/images/Fastbook/Google Data Analitics - Visualization/C6_mccandless_1.png " ")
+![](/images/Google Data Analitics - Visualization/C6_mccandless_1.png " ")
 
 
 - **Third**: State the insight of your graphic (key takeaways).
 
 As you discuss the main insights of the graphic, show the key takeaways. **The overall text on the screen only populated as you began to discuss it**. So the audience knows exactly what to be listening to when you talking
 
-![](/images/Fastbook/Google Data Analitics - Visualization/C6_mccandless_2.png " ")
+![](/images/Google Data Analitics - Visualization/C6_mccandless_2.png " ")
 
 
 - **Fourth**: Call out data to support that insight.
@@ -150,7 +150,7 @@ For example, the arrow of *"Happiness Score"* helps directing the attention to t
 
 Include conclusions with evidence or recommendations. Make sure that all the information that they are been listening worth something and they got something out of the presentation.
 
-![](/images/Fastbook/Google Data Analitics - Visualization/C6_mccandless_4.png " ")
+![](/images/Google Data Analitics - Visualization/C6_mccandless_4.png " ")
 
 
 ## Messy presentations 
@@ -160,7 +160,6 @@ The main problem with the messy presentation is the lack of a logical flow, so *
 Typical messy presentation includes:
 
 - No story or logical flow.
-
 - No slide and graph titles.
 - Too much text.
 - Hard to understand.
