@@ -10,4 +10,4 @@ title: VS Shortcuts I tend to forget
 - Markdown Preview: `ctrl + K -> V`
 - Terminal: `ctrl + '` or `ctrl + Shift + Y`
 - Command Palette (search): `ctrl + Shift + P`
-- Find&Replace: `ctrl + H`
+- Find & Replace: `ctrl + H`
