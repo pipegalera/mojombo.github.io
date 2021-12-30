@@ -48,7 +48,7 @@ Optional: consider creating a `requirements.txt` for best practices.
 
 It will say something similar to:
 
- *Installed kernelspec {kernel_name_here} in C:\Users\{windows_username_here}\AppData\Roaming\jupyter\kernels\{kernel_name_here}*
+*Installed kernelspec {kernel_name_here} in C:\Users\{windows_username_here\AppData\Roaming\jupyter\kernels\{kernel_name_here}*
 
 
 ### How to remove them?
