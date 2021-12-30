@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: book
 title: 'Key ideas from Atomic Habits by James Clear'
 ---
 
