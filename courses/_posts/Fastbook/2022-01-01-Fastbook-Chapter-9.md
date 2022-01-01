@@ -7,9 +7,6 @@ title: Fastbook - Chapter 9 - Tabular Modeling Deep Dive
 ================
 
 
-# Chapter 9 - Tabular Modeling Deep Dive
-
-
 <div class="alert alert-block alert-info"> This Notebook is completelly reproductible in Amazon SageMaker StudioLab <a href="https://aws.amazon.com/sagemaker/studio-lab/">(more info here)</a> </div>
 
 For this Chapter we will use more than the `fastai` package so I let below the necessary imports:
