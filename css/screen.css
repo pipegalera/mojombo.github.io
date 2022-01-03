@@ -35,6 +35,11 @@ h2 {
   padding-bottom: 1em;
 }
 
+img {
+  max-width: 100%;
+  max-height: 100vh;
+  margin: auto;
+}
 
 p {
   margin: 1em 0;
@@ -53,6 +58,21 @@ a:visited {
   color: grey;
 }
 
+
+.highlight pre {
+  overflow: auto;
+  background-color: hsl(0, 100%, 99%);
+  border-radius: 13px;
+  border: 1px solid #bababa;
+  margin: 1rem;
+}
+
+code {
+  background-color: #eee;
+  border-radius: 3px;
+  font-family: courier, monospace;
+  padding: 0 3px;
+}
 
 /*****************************************************************************/
 /*
@@ -151,83 +171,6 @@ ul.posts {
 /*
 /*****************************************************************************/
 
-#post {
-
-}
-
-  /* standard */
-
-    /* Outer code box */
-  #post pre {
-    border: 1px solid #ddd;
-    background-color: #eef;
-    padding: 0 0.2em;
-    margin: 2em;
-
-  }
-
-  #post ul,
-  #post ol {
-    margin-left: 1.35em;
-  }
-
-  #post code {
-    border: 1px solid #ddd;
-    background-color: #eef;
-    font-size: 100%;
-    padding: 0 .2em;
-    margin: 0em;
-    word-break: break-all;
-  }
-
-  #post pre code {
-    display: block;
-    border: none;
-    white-space: pre-wrap;       /* css-3 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -pre-wrap;      /* Opera 4-6 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-  }
-
-  #post img {
-    max-width: 42em;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    
-  
-  }
-
-  /* terminal */
-
-  #post pre.terminal {
-    border: 1px solid black;
-    background-color: #333;
-    color: white;
-  }
-
-  #post pre.terminal code {
-    background-color: #333;
-  }
-
-#related {
-  margin-top: 2em;
-}
-
-  #related h2 {
-    margin-bottom: 1em;
-  }
-
-.quote {
-    margin: 0;
-    background: #eee;
-    padding: 1em;
-    border-radius: 1em;
-  }
-.quote figcaption,
-.quote blockquote {
-    margin: 1em;
-  }
 
 /*****************************************************************************/
 /*
@@ -237,8 +180,6 @@ ul.posts {
 
 table {
   border-collapse: collapse;
-  box-shadow: 0 5px 10px gray;
-  background-color: white;
   text-align: center;
   justify-content: center;
   overflow: hidden;
@@ -248,28 +189,30 @@ table {
   max-width: fit-content;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 3%;
-
-  
+  margin-top: 1rem;
+  margin-bottom: 1rem;  
 
 }
 
 thead{
-  box-shadow: 0 5px 10px gray;
+  border-bottom: 1px solid black;
 }
 
 th{
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
   letter-spacing: 0.1rem;
   font-size: 0.8rem;
   font-weight:900;
-  color: rgb(104, 101, 101);
+  color: black;
 }
 
+
 td {
-  padding: 1rem 1rem;
-  border-bottom: 1px solid #ddd;
+  border-collapse: collapse;
+  font-size: 0.9rem;
   }
+
+tr:nth-child(even) {background: #F8F8F8}
 
 /*****************************************************************************/
 /*
@@ -439,7 +382,4 @@ td {
 .alert-danger .alert-link {
   color: #843534;
 }
-
-
-
 
