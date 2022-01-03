@@ -18,15 +18,15 @@ title: Google - Share Data Through the Art of Visualization
 
 ## Design thinking 
 
-- **Empathize** - thinking about the emotions and needs of the target audience.
+**Empathize** - thinking about the emotions and needs of the target audience.
 
-- **Define** - the audience’s needs, problems, and insights.
+**Define** - the audience’s needs, problems, and insights.
 
-- **Ideate** - use your findings from the previous phases to begin to create data visualizations.
+**Ideate** - use your findings from the previous phases to begin to create data visualizations.
 
-- **Prototype** - Start “putting it all together” - in this case, into a presentation or dashboard.
+**Prototype** - Start “putting it all together” - in this case, into a presentation or dashboard.
 
-- **Test** - Checking that your prototype is effective - in this case, by showing your visualizations to team members before the presentation.
+**Test** - Checking that your prototype is effective - in this case, by showing your visualizations to team members before the presentation.
 
 
 
@@ -62,7 +62,7 @@ Data storytelling is about communicating your insights effectively, giving your 
 
 A tool or strategy to find the compelling arguments that you want to emphasize in your storytelling.
 
-1. **Write notes on a white boar**d that contain the data analysis insights.
+1. **Write notes on a white board** that contain the data analysis insights.
 2. **Identify ideas** or concepts that arise repeatedly.
 3. Search for broad, **universal ideas** and messages.
 
@@ -71,13 +71,13 @@ Use it once the first draft of the narrative is over, to make sure that the insi
 
 ## Data storytelling steps 
 
-1. **Engage** your audience.
+### Step 1: **Engage** your audience.
 
 Know your audience point of view. **How your data project impact them?** What is their stake in the project? What do they hope to get from the data insights I deliver?
 
 Not every peace of information is relevant, part of the job as a data analyst is to eliminate the less important details.
 
-2. Create **compelling visuals**.
+### Step 2: Create **compelling visuals**.
 
 A dashboard keeps information presented in a neat and tidy way. The elements on the dashboard need to be **cohesive and balanced**. Cohesive means that you use a consistent theme and you are making a good use of the available space.
 
@@ -86,40 +86,43 @@ Always ask yourself:
 *"Does this data point or chart support the point I want people to walk away with?"*
 
 
-3. **Tell a story** in an interesting narrative.
+### Step 3: **Tell a story** in an interesting narrative.
 
 A compelling story needs the following attributes:
 
-- **Characters**: why they care? Make characters resemble your audience.
-- **Setting**: what's going on? The presentation must describe the current situation.
-- **Plot**: what creates tension or needs to be fix? Set the ground for a new solution that solves the tension.  Frame it as an opportunity that the company can't pass up.
-- **Big reveal**: show the solution to the problems the characters are facing, that makes them more competitive, improving a process, a new system...
-- **Aha moment**: why this solution is successful for the company?
+**Characters**: why they care? Make characters resemble your audience.
+
+**Setting**: what's going on? The presentation must describe the current situation.
+
+**Plot**: what creates tension or needs to be fix? Set the ground for a new solution that solves the tension.  Frame it as an opportunity that the company can't pass up.
+
+**Big reveal**: show the solution to the problems the characters are facing, that makes them more competitive, improving a process, a new system...
+
+**Aha moment**: why this solution is successful for the company?
 
 
+### Step 4: Tips for better preparing presentations 
 
-## Tips for better preparing presentations 
+Think the presentation from the **audience's point of view**. The only thought that's going though their head is *"where should my focus be? where I should be looking?"*
 
-- Think the presentation from the **audience's point of view**. The only thought that's going though their head is *"where should my focus be? where I should be looking?"*
+Twenty five-words rule: every slide in a presentation should have **at maximum** 25 words in 5 lines. The audience must focus on what your saying and not reading the slides.
 
-- Twenty five-words rule: every slide in a presentation should have **at maximum** 25 words in 5 lines. The audience must focus on what your saying and not reading the slides.
-
-- Use **arrows and call-outs** to direct the attention to the points that you want them to look at in the graphs.
+Use **arrows and call-outs** to direct the attention to the points that you want them to look at in the graphs.
 
 ![](/images/Google Data Analitics - Visualization/C6_mccandless_3.png " ")
 
 
-- **Include transition slides or keynotes**. Those are slides that indicates that the previous slide presentation is over and indicating what to expect in the next slide. *"Moving on, the next tackles the effect of..."*
+**Include transition slides or keynotes**. Those are slides that indicates that the previous slide presentation is over and indicating what to expect in the next slide. *"Moving on, the next tackles the effect of..."*
 
-- Always include a conclusion with the **most powerful discoveries** of you analysis.
+Always include a conclusion with the **most powerful discoveries** of you analysis.
 
-- **Link the visuals**, instead of copy-pasting them. This way all the changes made in the data and visualization tool are updated and reflected in the presentation.
+**Link the visuals**, instead of copy-pasting them. This way all the changes made in the data and visualization tool are updated and reflected in the presentation.
 
-- **Keep things *"kindergarten simple"***: keep the concepts that you're presenting as simple and straightforward as possible.
+**Keep things *"kindergarten simple"***: keep the concepts that you're presenting as simple and straightforward as possible.
 
-- Make your presentation **fun**. Nobody wants to be in a room were you are talking for a full hour and the only voice they are hearing is your own. Prepare quizzes, videos or ask questions to create interaction.
+Make your presentation **fun**. Nobody wants to be in a room were you are talking for a full hour and the only voice they are hearing is your own. Prepare quizzes, videos or ask questions to create interaction.
 
-- **Audience questions**: keep your responses short and to the point. They are asking for **enough details to understand, no all the details **. You can **repeat the question** to involve the whole audience and give yourself time to process the question. Also, take into account that they can always follow-up asking for more deep details so don't elaborate on the topic.
+**Audience questions**: keep your responses short and to the point. They are asking for **enough details to understand, no all the details **. You can **repeat the question** to involve the whole audience and give yourself time to process the question. Also, take into account that they can always follow-up asking for more deep details so don't elaborate on the topic.
 
 
 
@@ -127,26 +130,27 @@ A compelling story needs the following attributes:
 
 Use this method to introduce data visualizations during the presentations.
 
-- **First**: Introduce the graphic by name.
-- **Second**: Answer obvious questions before they're asked.
+**First**: Introduce the graphic by name.
+
+**Second**: Answer obvious questions before they're asked.
 
 One good way to make sure to follow these 2 steps is introducing the slide with the graphic with only the graphic name and the visualization. **No text**. Then, you describe what they are seeing and what the data comes from (answer obvious questions beforehand)
 
 ![](/images/Google Data Analitics - Visualization/C6_mccandless_1.png " ")
 
 
-- **Third**: State the insight of your graphic (key takeaways).
+**Third**: State the insight of your graphic (*key takeaways*).
 
 As you discuss the main insights of the graphic, show the key takeaways. **The overall text on the screen only populated as you began to discuss it**. So the audience knows exactly what to be listening to when you talking
 
 ![](/images/Google Data Analitics - Visualization/C6_mccandless_2.png " ")
 
 
-- **Fourth**: Call out data to support that insight.
+**Fourth**: Call out data to support that insight.
 
 For example, the arrow of *"Happiness Score"* helps directing the attention to the country with the highest score and darker blue color.
 
-- **Fifth**: Tell your audience why it  matters.
+**Fifth**: Tell your audience why it  matters.
 
 Include conclusions with evidence or recommendations. Make sure that all the information that they are been listening worth something and they got something out of the presentation.
 
@@ -160,7 +164,7 @@ The main problem with the messy presentation is the lack of a logical flow, so *
 Typical messy presentation includes:
 
 - No story or logical flow.
-- No slide and graph titles.
+- No axis and graph titles.
 - Too much text.
 - Hard to understand.
 - Inconsistent format (no theme).
@@ -171,20 +175,26 @@ Typical messy presentation includes:
 
 If you misunderstood your stakeholders' expectations or the project objectives, you won't be able to correctly answer their questions. Think ahead:
 
-- **Expectations**: What the stakeholders are suppose to get out of the presentation?
+**Expectations**: What the stakeholders are suppose to get out of the presentation?
 
   Avoid any jargon, acronyms, past events, or other necessary background information. Don't assume that they know what all the concepts or data sources in the presentations. **Start with zero assumptions**.
 
-- **Project objective**: Did you clearly address the initial goal of the project in the presentation?
+**Project objective**: Did you clearly address the initial goal of the project in the presentation?
 
 
 
-**Before the presentation**:
+### Before the presentation
 
 1. Assemble and prepare your questions.
+
 2. Discuss your presentation with your manager, other analysts, or other friendly contacts in your organization.
+
 3. **Ask a manager or other analysts what sort of questions were normally asked** by your specific audience in the past.
+
 4. Seek comments, feedback, and questions on the deck or the document of your analysis.
+
 5. At least 24 hours ahead of the presentation, try and brainstorm tricky questions or unclear parts you may come across- this helps avoid surprises.
+
 6. It never hurts to practice what you will be presenting, to account for any missing information or simply to calm your nerves.
+
 7. Put supplementary visualizations and content in the appendix to help answer questions.
