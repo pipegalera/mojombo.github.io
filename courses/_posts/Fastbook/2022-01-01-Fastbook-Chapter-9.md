@@ -7,6 +7,7 @@ title: Fastbook - Chapter 9 - Tabular Modeling Deep Dive
 ================
 
 
+
 <div class="alert alert-block alert-info"> This Notebook is completelly reproductible in Amazon SageMaker StudioLab <a href="https://aws.amazon.com/sagemaker/studio-lab/">(more info here)</a> </div>
 
 For this Chapter we will use more than the `fastai` package so I let below the necessary imports:
@@ -21,10 +22,19 @@ import IPython
 import graphviz
 from dtreeviz.trees import *
 from scipy.cluster import hierarchy as hc
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier, export_graphviz
-from sklearn.ensemble import BaggingClassifier, RandomForestClassifier, BaggingRegressor, RandomForestRegressor, GradientBoostingRegressor
-from sklearn.metrics import mean_squared_error,confusion_matrix, classification_report
+from sklearn.model_selection import train_test_split, 
+                                    cross_val_score
+from sklearn.tree import DecisionTreeRegressor, 
+                         DecisionTreeClassifier, 
+                         export_graphviz
+from sklearn.ensemble import BaggingClassifier, 
+                             RandomForestClassifier, 
+                             BaggingRegressor, 
+                             RandomForestRegressor, 
+                             GradientBoostingRegressor
+from sklearn.metrics import mean_squared_error,
+                            confusion_matrix, 
+                            classification_report
 from fastai.tabular.all import *
 
 plt.style.use('seaborn-white')
@@ -669,10 +679,12 @@ Now that our data is all numeric, and there are no missing values, we can create
 ```python
 tree_model = DecisionTreeRegressor(max_leaf_nodes=4)
 tree_model.fit(X, y)
+```
 
-
+```python
     DecisionTreeRegressor(max_leaf_nodes=4)
 ```
+
 To keep it simple, we’ve told sklearn to create just four leaf nodes. To see what it’s
 learned, we can display the tree:
 
@@ -685,6 +697,8 @@ def draw_tree(t, df, size=10, ratio=0.6, precision=0, **kwargs):
 ```
 {% endraw %}
 
+ 
+ 
 
 ```python
 draw_tree(tree_model, X, size=7, leaves_parallel=True, precision=2)
