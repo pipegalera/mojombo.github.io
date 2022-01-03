@@ -35,6 +35,12 @@ h2 {
   padding-bottom: 1em;
 }
 
+h3 {
+  font-size: 120%;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
 img {
   display: block;
   max-width: 100%;
