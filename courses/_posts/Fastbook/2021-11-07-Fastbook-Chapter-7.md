@@ -65,7 +65,6 @@ Let's compare two models, one with normalized data and one without normalization
 
 ### Non-normalzied xRestNet50
 
-
 ```python
 model = xresnet50()
 learn = Learner(dls, model, loss_func = CrossEntropyLossFlat(), metrics=accuracy)
@@ -387,9 +386,6 @@ Run it to observe the output shape:
 
 ```python
 learn.tta()
-```
-
-
 
     (TensorBase([[1.3654e-03, 1.1131e-04, 4.8078e-05,  ..., 8.0065e-09, 1.8123e-08,
               2.7091e-08],
@@ -405,7 +401,7 @@ learn.tta()
              [1.1344e-05, 6.2957e-05, 9.8214e-01,  ..., 1.0300e-11, 1.2358e-11,
               2.7416e-11]]),
      TensorCategory([4, 6, 4,  ..., 1, 0, 2]))
-
+```
 
 
 The outputs are:
@@ -419,10 +415,9 @@ Notice that the model do not have to be retrained because **we don't use the val
 ```python
 preds, targs = learn.tta()
 accuracy(preds, targs).item()
-```
 
     0.869305431842804
-
+```
 
 
 **TTA gives a little boost in performance (~1%) - taking into account that it doesn't require additional model training.**

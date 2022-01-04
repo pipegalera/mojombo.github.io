@@ -681,10 +681,6 @@ tree_model = DecisionTreeRegressor(max_leaf_nodes=4)
 tree_model.fit(X, y)
 ```
 
-```python
-    DecisionTreeRegressor(max_leaf_nodes=4)
-```
-
 To keep it simple, we’ve told sklearn to create just four leaf nodes. To see what it’s
 learned, we can display the tree:
 
@@ -807,13 +803,9 @@ The model perfectly predicts the price of the auctions on the training, but chec
 
 ```python
 tree_model_3.get_n_leaves()
-```
-
-
-
 
     324565
-
+```
 
 
 The model uses around 325k leafs for 400k datapoints - of course it is overfitting, we have nearly as many leaf nodes as data points.
@@ -1328,13 +1320,13 @@ rf_model_3 = random_forest(X_final, y)
 
 ```python
 print_rmse(rf_model_3, X_final, X_valid_final)
-```
+
 
     Training RMSE: 0.188442
     Validation RMSE: 0.230612
     Out-of-Bag RMSE: 0.219032
     Out-of-Bag Accuracy: 0.9
-
+```
 
 The validation RMSE and Out-of-Bag RMSE is the metrics that we most care about, as they rely on data that the model hasn't seen before. And they are looking good! 
 
