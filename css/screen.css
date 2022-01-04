@@ -30,7 +30,7 @@ h1 {
 }
 
 h2 {
-  font-size: 150%;
+  font-size: 140%;
   padding-top: 1em;
   padding-bottom: 1em;
 }
@@ -65,8 +65,17 @@ a:visited {
   color: grey;
 }
 
+.site-description {
+  color: #999;
+  font: 15px/1.5 "Cousine","Courier New",Courier,monospace;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
 
-
+.site-headers {
+  font-size: 180%;
+  margin-bottom: 1em;
+}
 
 /*****************************************************************************/
 /*
@@ -203,6 +212,7 @@ th{
 td {
   border-collapse: collapse;
   font-size: 0.9rem;
+  padding: 0 10px;
   }
 
 tr:nth-child(even) {background: #F8F8F8}

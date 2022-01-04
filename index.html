@@ -5,7 +5,7 @@ title: Pipe Galera
 
 
 <div id="home">
-  <h1 ><i class="material-icons-two-tone">notes</i> Blog posts</h1>
+  <p class="site-headers">blog posts</p>
   <ul class="posts">
     {% for post in site.categories.blog %}
       <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
@@ -13,7 +13,7 @@ title: Pipe Galera
   </ul>
 
 
-  <h1><i class="material-icons-outlined">dashboard</i> Projects</h1>
+  <p class="site-headers">projects</p>
   <ul class="posts">
     <li>- <a href="https://github.com/pipegalera/Goodreads-webscraper">Goodreads Webscraper:</a> A python script to collect book data from Goodreads.com (webscape).</li>
     <li>- <a href="https://share.streamlit.io/pipegalera/book_recommendation_app/main">Book recommender web-app:</a> Book recommendation web-app built with python and deployed using Streamlit.</li>
@@ -21,7 +21,7 @@ title: Pipe Galera
   </ul>
 
 
-  <h1><i class="material-icons-two-tone">cast_for_education</i> Courses notes</h1>
+  <p class="site-headers">courses notes</p>
   <ul class="posts">
     {% for post in site.categories.courses %}
       <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
@@ -31,14 +31,14 @@ title: Pipe Galera
 
 
 
-  <h1><i class="material-icons-outlined">code</i> Short code snippets</h1>
+  <p class="site-headers">short code snippets</p>
   <ul class="posts">
     {% for post in site.categories.code %}
       <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
     {% endfor %}
   </ul>
 
-  <h1><i class="material-icons-outlined">auto_stories</i> Book notes</h1>
+  <p class="site-headers">book notes</p>
   <ul class="posts">
     {% for post in site.categories.book_notes %}
       <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
