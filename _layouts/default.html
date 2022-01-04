@@ -1,21 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" width="width=device-width, initial-scale=0.6, maximum-scale=2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>{{ page.title }}</title>
 
-  <!-- Highlight JS -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/vs.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- Custom Highlight -->
+  <link rel="stylesheet" href="/css/custom-atom-dark-one.css"/>
 
    <!-- Homepage CSS -->
-   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
-
-   <!-- Typekit -->
-   <script type="text/javascript" src="http://use.typekit.com/jpd0pfm.js"></script>
-   <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+   <link rel="stylesheet" href="/css/screen.css" media="screen, projection" />
 
   <!-- MathJax -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -31,13 +24,6 @@
 </head>
 <body>
 
-<!-- ClickTale Top part -->
-<script type="text/javascript">
-var WRInitTime=(new Date()).getTime();
-</script>
-<!-- ClickTale end of Top part -->
-
-
 <div class="site">
   <div>
     <h1 style="text-align: center; ">Pipe Galera's site</h1>
@@ -45,26 +31,9 @@ var WRInitTime=(new Date()).getTime();
 
   {{ content }}
 
-  <div class="footer">
-    <div class="contact">
-      <p>
-        Pipe Galera 
-        <br>
-        People Analytics Partner at
-          <a href="https://maersk.com/">Maersk</a>
-      </br>
-        Views my own.
-      </p>
-    </div>
-    <div class="contact">
-      <p>
-        <a href="http://github.com/pipegalera/"><i class="fa fa-github" style="font-size:36px;"></i></a><br />
-        <a href="http://twitter.com/pipegalera/"><i class="fa fa-twitter" style="font-size:36px;"></i></a><br />
-      </p>
-    </div>
-  </div>
+<div class="footer">
+    <p class="copyright">Pipe Galera @ 2022</p>
 </div>
-
 
 </body>
 </html>
