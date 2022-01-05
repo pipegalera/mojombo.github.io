@@ -579,7 +579,7 @@ Overfitting seems less likely to be a problem, however,
 because we’re not showing the same image in each epoch, but are instead showing
 a random combination of two images.
 
-# Label Smoothing
+## Label Smoothing
 
 ML models optimize for the metric that you select. If the metric is accuracy, the model search for the maximum accuracy - minimazing the loss function by SGD. 
 
