@@ -12,12 +12,24 @@ title: Pipe Galera
     {% endfor %}
   </ul>
 
+
+  <p class="site-headers">projects</p>
+  <ul class="posts">
+    <li>- <a href="https://github.com/pipegalera/Goodreads-webscraper">Goodreads Webscraper:</a> A python script to collect book data from Goodreads.com (webscape).</li>
+    <li>- <a href="https://share.streamlit.io/pipegalera/book_recommendation_app/main">Book recommender web-app:</a> Book recommendation web-app built with python and deployed using Streamlit.</li>
+    <li>- <a href="https://share.streamlit.io/pipegalera/basketballreference-webscraper/main">Basketball-reference web-app scraper:</a> Basketball-reference web scraper app built with python and deployed using Streamlit.</li>
+  </ul>
+
+
   <p class="site-headers">courses notes</p>
   <ul class="posts">
     {% for post in site.categories.courses %}
       <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
     {% endfor %}
   </ul>
+
+
+
 
   <p class="site-headers">short code snippets</p>
   <ul class="posts">
@@ -33,6 +45,7 @@ title: Pipe Galera
     {% endfor %}
   </ul>
 
+<<<<<<< HEAD
   <p class="site-headers">projects</p>
   <ul class="posts">
     <li>📚 <a href="https://github.com/pipegalera/Goodreads-webscraper">Goodreads Webscraper:</a> A python script to collect book data from Goodreads.com (webscape).</li>
@@ -41,3 +54,5 @@ title: Pipe Galera
   </ul>
 
   </div>
+=======
+>>>>>>> parent of 8987651 (:zap: Improved responsiveness, word wrapping, and included emojis)
