@@ -3,3 +3,4 @@ _site/
 .DS_Store
 *.swp
 .jekyll-cache/Jekyll/Cache/
+index copy.html
