@@ -2,8 +2,10 @@
                 overflow: auto;
                 border-radius: 13px;
                 border: 1px solid #bababa;
-                margin: 1rem;
-                padding: 1rem;
+                padding-left: 2%;
+                display: block;
+                overflow-x: auto;
+                width: 100%;
             }
                 
 .highlight .hll{background:#282c34}
@@ -69,7 +71,5 @@
 .highlight .gi{color:#a6e22e}
 
 code {
-    border-radius: 3px;
-    padding: 0 3px;
-    color: red;
+    color: #AF0D09;
   }
