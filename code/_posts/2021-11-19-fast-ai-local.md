@@ -34,3 +34,6 @@ title: How to set up fastai in Windows 10, fast.
     Try: 
 
     `from fastai.vision.all import *`
+
+
+You can also use Amazon Sega Maker Lab (free Tesla T4!) and the process is the same skipping step 1.

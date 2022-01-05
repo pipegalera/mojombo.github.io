@@ -19,7 +19,7 @@ A first step to declutter is taking a look of what you already have first.
 
 `conda env list`
 
-Locally: 
+Also locally at:
 
 - Miniconda: C:\Users\{*windows_username_here*}\miniconda3\envs
 - Anaconda: C:\Users\{*windows_username_here*}\.conda\envs
@@ -28,7 +28,9 @@ Locally:
 
 `jupyter kernelspec list`
 
-Locally: C:\Users\{*windows_username_here*}\AppData\Roaming\jupyter\kernels\
+Also locally at:
+
+C:\Users\{*windows_username_here*}\AppData\Roaming\jupyter\kernels\
 
 ### How do I create jupyter project from zero?
 
@@ -36,7 +38,7 @@ Locally: C:\Users\{*windows_username_here*}\AppData\Roaming\jupyter\kernels\
 
 `conda create -n {enviroment_name_here} python={X.X}`
 
-Optional: consider creating a `requirements.txt` for best practices.
+*Optional* -> consider creating a `requirements.txt` file for best practices.
 
 `conda activate {enviroment_name_here}`
 
@@ -46,10 +48,13 @@ Optional: consider creating a `requirements.txt` for best practices.
 
 `python -m ipykernel install --user -n {kernel_name_here}`
 
-It will say something similar to:
+Your IDE will say something similar to:
 
-*Installed kernelspec {kernel_name_here} in C:\Users\{windows_username_here\AppData\Roaming\jupyter\kernels\{kernel_name_here}*
+```
+Installed kernelspec {kernel_name_here} in
 
+C:\Users\{windows_username_here\AppData\Roaming\jupyter\kernels\{kernel_name_here}
+```
 
 ### How to remove them?
 
@@ -62,8 +67,7 @@ It will say something similar to:
 `jupyter kernelspec uninstall {kernel_name_here} `
 
 
-
-### How to rename thhem?
+### How to rename them?
 
 **Environments:**
 
