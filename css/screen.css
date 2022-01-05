@@ -77,6 +77,24 @@ a:visited {
   margin-bottom: 1em;
 }
 
+ol {
+  padding: 20px;
+  margin-left: 35px;
+}
+
+ol li {
+  margin: 5px;
+}
+
+ul {
+  padding: 20px;
+  margin-left: 35px;
+}
+
+ul li {
+  margin: 5px;
+}
+
 /*****************************************************************************/
 /*
 /* Home
