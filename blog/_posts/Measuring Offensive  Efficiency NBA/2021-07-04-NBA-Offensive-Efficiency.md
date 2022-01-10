@@ -39,7 +39,7 @@ While there are [players that contribute to the offense of the game without assi
 
 This calculation can be done in Python, and it returns the same dataset with an added column measuring offensive efficiency:
 
-```
+```python
 def offensive_efficiency(df):
     df["OE"] = (df.FG + df.AST) / (df.FGA - df.ORB + df.AST + df.TOV)
     df["OE"].replace([np.inf, -np.inf, np.nan], 0, inplace=True)
@@ -171,7 +171,7 @@ Efficient Offensive Production (EOP) of player $$i$$ at season $$s$$ is equal to
 
 The application in Python follows as:
 
-```
+```python
 def EOP(df):
     df["EOP"] = [(0.16 * df["AST"] + df["PTS"])] * [(df.FG + df.AST) / (df.FGA - df.ORB + df.AST + df.TOV)]
     df["EOP"].replace([np.inf, -np.inf, np.nan], 0, inplace=True)
