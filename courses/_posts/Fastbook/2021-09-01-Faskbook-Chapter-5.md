@@ -6,37 +6,6 @@ title: Fastbook - Chapter 5 - Image Classification
 {{ page.title }}
 ================
 
-## About Fastbook
-
-Fastbook is a book is focused on the practical side of deep learning. It starts with the big picture, such as definitions and general applications of deep learning, and progressively digs beneath the surface into concrete examples.
-
-The book is based on *fastai* API, an API on top of Pytorch that makes it easier to use state-of-the-art methods in deep learning.
-
-The early chapters contain the basics of deep learning, so I skimmed them and started to make notes on the fifth chapter. It doesn't need you to understand models such as Convolutional Neural Networks and how they work, but it definitely helped me following the book.
-
-I used Google Colab notebooks as it provides free GPU. The downside is that it doesn't have any memory available so you will have to install fastai every time you run a notebook. The fastbook package includes fastai and several easy-access datasets to test the models.
-
-## Installing fastai in Google Colab
-
-```python
-!pip install -Uqq fastbook
-
-     |████████████████████████████████| 727kB 29.0MB/s
-     |████████████████████████████████| 1.2MB 45.6MB/s
-     |████████████████████████████████| 194kB 47.3MB/s
-     |████████████████████████████████| 51kB 7.9MB/s
-     |████████████████████████████████| 61kB 9.2MB/s
-     |████████████████████████████████| 61kB 9.0MB/s
-
-```
-
-
-```python
-import fastbook
-fastbook.setup_book()
-from fastai.vision.all import *
-from fastai.vision import *
-```
 
 ## Fastbook Notes - Chapter 5: Image Classification
 
@@ -595,11 +564,11 @@ The first layer learns very simple foundations, like image edges and gradient de
 
 By default, fastai `cnn_learner` uses discriminative learning rates.
 
-Let’s use this approach to replicate the previous training, but this time using Discriminative learning rates using a slice range in the learning rate parmeter: `lr_max=slice(4e-6,4e-4)`. 
+Let’s use this approach to replicate the previous training, but this time using Discriminative learning rates using a slice range in the learning rate parmeter: `lr_max=slice(4e-6,4e-4)`.
 
 - The first value (`4e-6`) is the learning rate in the earliest layer of the neural network.
 
-- The second value (`4e-4`) is the learning rate of the final layer. 
+- The second value (`4e-4`) is the learning rate of the final layer.
 
 - The layers in between will have learning rates that scale up equidistantly throughout that range - from the first until they reach the second value.
 
