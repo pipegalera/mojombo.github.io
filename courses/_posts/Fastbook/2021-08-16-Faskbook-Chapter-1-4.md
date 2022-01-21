@@ -22,32 +22,31 @@ The fastbook package includes fastai and several easy-access datasets to test th
 
 1. Iniciate a Terminal and create a conda enviroment:
 
-```python
-conda create -n fastai python=3.8
-```
-
+    ```python
+    conda create -n fastai python=3.8
+    ```
 In the terminal activate the virtual enviroment: `conda activate fastai`
 
 2. Install Pytorch and Fastai
 
-```python
-# Pytorch
-conda install pytorch torchvision torchaudio
-```
+    ```python
+    # Pytorch
+    conda install pytorch torchvision torchaudio
+    ```
 
-```python
-# Fastai
-conda install -c fastchan fastai
-```
+    ```python
+    # Fastai
+    conda install -c fastchan fastai
+    ```
 
 3. Import fastai
 
-```python
-import fastbook
-fastbook.setup_book()
-from fastai.vision.all import *
-from fastai.vision import *
-```
+    ```python
+    import fastbook
+    fastbook.setup_book()
+    from fastai.vision.all import *
+    from fastai.vision import *
+    ```
 
 For a local instalation you should install CUDA Toolkit 11.3 before anything, and add `cudatoolkit=11.3 -c pytorch` at the end when you install Pytorch. Please notice that unless you have a really powerful GPU (Nvidia 3080+) you won't get the same times training the models.
 
