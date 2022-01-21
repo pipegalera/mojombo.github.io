@@ -164,7 +164,7 @@ thead{
 th{
   padding: 1rem 1rem;
   letter-spacing: 0.1rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight:900;
   color: black;
 }
@@ -178,6 +178,7 @@ td {
 
 tr:nth-child(even) {background: #F8F8F8}
 
+tr:hover {text-decoration: #4a9bc1 wavy underline;}
 
 
 /*****************************************************************************/

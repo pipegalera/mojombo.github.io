@@ -8,6 +8,7 @@
                 width: 100%;
                 padding-top: 10px;
                 padding-bottom: 10px;
+                font-size: smaller;
             }
 .highlight .hll { background-color: #ffffcc }
 .highlight .c { color: #999988; font-style: italic } /* Comment */
