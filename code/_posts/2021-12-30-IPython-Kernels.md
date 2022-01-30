@@ -46,7 +46,7 @@ C:\Users\{*windows_username_here*}\AppData\Roaming\jupyter\kernels\
 
 `conda install ipykernel jupyter`
 
-`python -m ipykernel install --user -n {kernel_name_here}`
+`python -m ipykernel install --user --name {kernel_name_here}`
 
 Your IDE will say something similar to:
 

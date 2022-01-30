@@ -47,9 +47,8 @@ warnings.filterwarnings('ignore')
 x = torch.cuda.get_device_name(0) if torch.cuda.is_available() else None
 print(x)
 
-    Tesla T4
+      Tesla T4
 ```
-
 Tabular modeling takes data in the form of a table (like a spreadsheet or CSV). The
 objective is to predict the value in one column based on the values in the other columns.
 
@@ -73,10 +72,6 @@ the sale price of a particular piece of heavy equipment at auction based on its 
 
 ```python
 df = pd.read_csv('/home/studio-lab-user/sagemaker-studiolab-notebooks/TrainAndValid.csv', low_memory=False)
-```
-
-
-```python
 df.head()
 ```
 

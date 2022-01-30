@@ -127,7 +127,6 @@ This [Blazers] Melo is about efficiency and sacrifice: Anthony would primarily l
     &mdash; Michael Pina, <cite>Sports Illustrated (August 20, 2020)</cite>  </figcaption>
 </figure>
 
-<q>"This [Blazers] Melo is about efficiency and sacrifice: Anthony would primarily look to melt defenses behind the three-point line, cure himself of all urges to go one-on-one, and give consistent effort on defense."</q>
 
 It is safe to say that if Melo hasn't changed to a more efficient style he likely would be out of the NBA.
 
