@@ -27,18 +27,20 @@ h1 {
 }
 
 h2 {
-  font-size: 30px;
+  font-size: 25px;
   padding-top: 1em;
   padding-bottom: 1em;
-  line-height: normal;
-  color: #31708f;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #aaa;
+  border-bottom: 1px solid #C8CACA;
 }
 
 h3 {
   font-size: 25px;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
-  line-height: normal;
+  line-height: 1;
   color: #4a9bc1;
 }
 
