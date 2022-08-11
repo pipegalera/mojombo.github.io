@@ -32,7 +32,7 @@ Building the deep learning model is only 5% of the ML Project. What its the 95% 
 - Monitoring
 
 
-![](/images/MLOpss_specialization/pic0.png)
+![](/images/MLOps_specialization/pic0.png)
 
 
 The workflow of a machine learning project is to systematically plan out the life cycle of a machine learning project. The framework contains 4 steps:
