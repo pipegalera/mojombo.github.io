@@ -1,6 +1,6 @@
 ---
 layout: course
-title: DeepLearning.AI MLOps Specialization - Introduction to Machine Learning in Production
+title: MLOps Specialization - Introduction to Machine Learning in Production
 ---
 
 {{ page.title }}
@@ -8,7 +8,7 @@ title: DeepLearning.AI MLOps Specialization - Introduction to Machine Learning i
 
 
 
-MLOps stands for Machine Learning Operations. MLOps is a core function of Machine Learning engineering, focused on streamlining the process of taking machine learning models to production, and then maintaining and monitoring them. 
+DeepLearning.AI MLOps stands for Machine Learning Operations. MLOps is a core function of Machine Learning engineering, focused on streamlining the process of taking machine learning models to production, and then maintaining and monitoring them. 
 
 
 # Overview of the ML Life cycle and Deployment
@@ -32,7 +32,7 @@ Building the deep learning model is only 5% of the ML Project. What its the 95% 
 - Monitoring
 
 
-![](/images/MLOpss_specialization/pic0.jpeg)
+![](/images/MLOpss_specialization/pic0.png)
 
 
 The workflow of a machine learning project is to systematically plan out the life cycle of a machine learning project. The framework contains 4 steps:
