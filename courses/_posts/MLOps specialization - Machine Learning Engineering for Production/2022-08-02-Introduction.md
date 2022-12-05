@@ -14,7 +14,7 @@ MLOps stands for Machine Learning Operations. MLOps is a core function of Machin
 
 ## The Machine Learning Project Life cycle 
 
-Beyond building the model, there are several aspects that determine the success of a machine learning in production/
+Beyond building the model, there are several aspects that determine the success of a machine learning in production.
 
 ![](/images/MLOps_specialization/pic1.png)
 
