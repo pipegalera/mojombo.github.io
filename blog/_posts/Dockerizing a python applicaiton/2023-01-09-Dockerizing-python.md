@@ -36,7 +36,6 @@ Now that we tour from computer, to server, to virtual machines, to cloud provide
 
 ## Basic Docker
 
-
 The Docker program makes sure that you can run your code/app/dashboard in a virtual machine in the cloud, without need of your local configurations, with everyone having access to the same configuration.
 
 It compertamentalize your code and requirements in chucks. These "chunks" or containers keep everything its needed for the code to be run. 
@@ -51,7 +50,7 @@ The basic structure of Docker is:
 
 In summary, you use dockerfiles to build images, that are the parts or the final container that can be deployed.
 
-# Dockerizing a Python script
+## Practial example dockerizing a Python script
 
 Dockerizing a script allows to deploy it. Docker handles the packing, deploying, and running of applications.
 
@@ -105,8 +104,7 @@ Once we know is there, we can run the Docker image by `docker run`:
 
 Et voilà, the docker run the code, compartimentalized. 
 
-
-# Uses
+## Uses
 
 Why should I care or how can I use this in DS? 
 
