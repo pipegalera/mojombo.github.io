@@ -109,7 +109,7 @@ They are 2 of the best players in history when it comes to quantity of offensive
 
 The following graph shows the OE in the **regular season** of both players over time:
 
-![](/images/blogs/lebron_carmelo.png)
+![](/images/blogs/nba_offensive_rating/lebron_carmelo.png)
 
 **LeBron efficiency peaks in the 2012-2013 season with Miami**. They won 27 games in a row that season (the second-longest winning streak in NBA history), finished with a 66–16 record. LeBron's most efficient regular season was translated into an NBA championship for the Miami Heat, being the MVP of both the regular season and the finals.
 

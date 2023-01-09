@@ -7,7 +7,7 @@ title: 'Dockerizing a python application'
 ================
 
 
-<img src="images/dockerizing_python_app/docker.webp" alt="Dockerfile" style="zoom:40%;" />
+<img src="/images/blogs/dockerizing_python_app/docker.webp" alt="docker" style="zoom:40%;" />
 
 
 As a data scientist, Docker makes sure than an API, a Dashboard in Streamlit/Shiny, or a scheduled script can be public and reproducible. Its away to package your code, making your code able to run it other hardware and systems. 
@@ -26,11 +26,11 @@ The goal of Docker is deploy code that you have had written somewhere else. This
 
 Instead of having 1 server running 1 operating system, computers can emulate more than one machine. Imagine a computer having multiple partitions of Linux, Windows, with different version, programs, and capacities. A server can have hundreds of versions or "virtual machines". 
 
-![Virtual Machines](images/dockerizing_python_app/virtual_machine.png)
+![Virtual Machines](/images/blogs/dockerizing_python_app/virtual_machine.png)
 
 Imagine the "cloud" as different gigantic rooms somewhere around the world, with server racks with thousands of computers, running even more hundred of thousands of virtual machines. The famous cloud providers (Google Cloud, AWS or Azure VMs) are simply renting you a small space in this gigatic room to store/run your code.
 
-<img src="images/dockerizing_python_app/server_center.png" alt="Dockerfile" style="zoom:38%;" />
+<img src="/images/blogs/dockerizing_python_app/server_center.png" alt="server_center" style="zoom:38%;" />
 
 Now that we tour from computer, to server, to virtual machines, to cloud providers...How this relates to Docker? 
 
@@ -47,7 +47,7 @@ The basic structure of Docker is:
 - **Docker images**: a container is run based on images layered on top of each other. One image is the OS (e.g. Windows), another Python, another the packages (e.g. Streamlit, sklearn).
 - **Dockerfiles**: A blueprint for the images. The files that specify how the images must be layered and build. For example, you want the OS to be built before the image of Python, and Python to be built before installing sklearn.
 
-<img src="images/dockerizing_python_app/docker-progression.png" alt="Dockerfile" style="zoom:40%;" />
+<img src="/images/blogs/dockerizing_python_app/docker-progression.png" alt="docker-progression" style="zoom:40%;" />
 
 In summary, you use dockerfiles to build images, that are the parts or the final container that can be deployed.
 
@@ -61,7 +61,7 @@ First, make sure that you have installed correctly installed Docker for your mac
 
 The instructions of the container must be written in the dockerfile. Here we build a basic container by writting the following instructions or Dockerfile:
 
-![Dockerfile](images/dockerizing_python_app/dockerfile.png)
+![Dockerfile](/images/blogs/dockerizing_python_app/dockerfile.png)
 
 Below I'll explain the meaning of the different commands. 
 
@@ -73,12 +73,12 @@ This is one of the pre-installed images that Docker has. There are more pre-inst
 
 In `COPY requirements.txt ./` we tell Docker to copy the requirements. This requirements are the list of packages that we need for the script. In this case only `seaborn`:
 
-![](images/dockerizing_python_app/requirements.png)
+![requirements](/images/blogs/dockerizing_python_app/requirements.png)
 
 - By running `RUN pip install --no-cache-dir -r requirements.txt` we install them.
 - `COPY python_script.py /` copy the script the code that we want to run into the docker container. The script is just displaying the first 5 rows of the iris dataset:
 
-![python_script](images/dockerizing_python_app/python_script.png)
+![python_script](/images/blogs/dockerizing_python_app/python_script.png)
 
 - The last line of the Dockerfile, `ENTRYPOINT` is the final image layered that say to Docker what to do when someone access this Docker image: run python, and the python script.
 
@@ -90,18 +90,18 @@ Let's build a docker and call or tag it `simple_python_app` by a command line:
 
 ```docker build -t simple_python_app .```
 
-![build](images/dockerizing_python_app/build.png)
+![build](/images/blogs/dockerizing_python_app/build.png)
 
 It should create the docker quite fast and without errors if Docker is installed correctly in your machine. 
 
 Checking if the image is created can be done by running: `docker image list`
 
-![list](images/dockerizing_python_app/list.png)
+![list](/images/blogs/dockerizing_python_app/list.png)
 
 Once we know is there, we can run the Docker image by `docker run`:
 
 
-![iris_head](images/dockerizing_python_app/iris_head.png)
+![iris_head](/images/blogs/dockerizing_python_app/iris_head.png)
 
 Et voilà, the docker run the code, compartimentalized. 
 
